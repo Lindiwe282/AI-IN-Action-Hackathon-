@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Planner from './pages/Planner';
 import Investment from './pages/Investment';
+import NewsAnalyzer from './pages/NewsAnalyzer';
 import Loan from './pages/Loan';
 import Literacy from './pages/Literacy';
 import FraudCheck from './pages/FraudCheck';
@@ -48,6 +49,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/planner" element={<Planner />} />
               <Route path="/investment" element={<Investment />} />
+              <Route path="/news-analyzer" element={<NewsAnalyzer />} />
               <Route path="/loan" element={<Loan />} />
               <Route path="/literacy" element={<Literacy />} />
               <Route path="/fraud-check" element={<FraudCheck />} />

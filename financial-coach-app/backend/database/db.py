@@ -1,24 +1,48 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
+from .neon_config import apply_neon_config_to_app, verify_neon_connection
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Database instance (will be initialized in app.py)
 db = None
 migrate = None
 
 def init_database(app):
-    """Initialize database with Flask app"""
+    """Initialize database with Flask app using Neon PostgreSQL"""
     global db, migrate
     
-    # Configure database
-    if os.getenv('DATABASE_URL'):
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-    else:
-        # Default to SQLite for development
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "..", "financial_coach.db")}'
-    
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # Apply Neon PostgreSQL configuration
+    try:
+        apply_neon_config_to_app(app)
+        logger.info("Applied Neon PostgreSQL configuration")
+        
+        # Verify connection
+        if verify_neon_connection():
+            logger.info("✅ Neon PostgreSQL connection verified")
+        else:
+            logger.warning("⚠️ Could not verify Neon connection, proceeding anyway")
+            
+    except Exception as e:
+        logger.warning(f"Neon configuration failed, falling back to environment: {str(e)}")
+        
+        # Fallback to environment variable or SQLite
+        if os.getenv('DATABASE_URL'):
+            app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+            app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+                'pool_size': 10,
+                'pool_recycle': 3600,
+                'pool_pre_ping': True,
+                'max_overflow': 20
+            }
+        else:
+            # Final fallback to SQLite for development
+            basedir = os.path.abspath(os.path.dirname(__file__))
+            app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "..", "financial_coach.db")}'
+        
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # Initialize extensions
     from flask_sqlalchemy import SQLAlchemy
