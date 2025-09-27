@@ -1,3 +1,4 @@
+# financial-coach-app/backend/routes/fraud.py
 from flask import Blueprint
 from controllers.fraud_controller import FraudController
 
@@ -7,7 +8,7 @@ fraud_controller = FraudController()
 @fraud_bp.route('/detect', methods=['POST'])
 def detect_fraud():
     """Detect potential fraud"""
-    return fraud_controller.detect_fraud()
+    return fraud_controller.detect_fraud_route()
 
 @fraud_bp.route('/analyze-patterns', methods=['POST'])
 def analyze_patterns():

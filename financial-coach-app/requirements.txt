@@ -31,8 +31,6 @@ psycopg2-binary==2.9.7
 marshmallow==3.20.1
 Werkzeug==2.3.7
 
-# Optional: For enhanced ML capabilities
-scipy==1.11.2
 
 # Development and testing dependencies (optional)
 pytest==7.4.0
