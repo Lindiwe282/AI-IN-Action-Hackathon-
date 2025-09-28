@@ -7,6 +7,13 @@ const Literacy = () => {
   const [quizScore, setQuizScore] = useState(0);
   const [xpEarned, setXpEarned] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [sectionsCompleted, setSectionsCompleted] = useState({
+    investments: false,
+    interest: false,
+    quiz: false
+  });
+  const [showAuraReward, setShowAuraReward] = useState(false);
+  const [auraRewardAmount, setAuraRewardAmount] = useState(0);
 
   const investments = [
     {
@@ -200,6 +207,54 @@ const Literacy = () => {
     },
   ];
 
+  // Function to handle section completion
+  const handleSectionComplete = (sectionName) => {
+    if (!sectionsCompleted[sectionName]) {
+      let reward = 0;
+      
+      if (sectionName === "investments") {
+        reward = 10;
+      } else if (sectionName === "interest") {
+        reward = 5;
+      }
+      
+      if (reward > 0) {
+        setSectionsCompleted(prev => ({
+          ...prev,
+          [sectionName]: true
+        }));
+        setAuraRewardAmount(reward);
+        setXpEarned(prev => prev + reward);
+        setShowAuraReward(true);
+
+        // Hide the reward message after 3 seconds
+        setTimeout(() => {
+          setShowAuraReward(false);
+        }, 3000);
+      }
+    }
+  };
+
+  // Add useEffect to trigger section completion when user views the content
+  React.useEffect(() => {
+    if (section === "investments" && !sectionsCompleted.investments) {
+      // Add a small delay to ensure user has time to read
+      const timer = setTimeout(() => {
+        handleSectionComplete("investments");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [section, sectionsCompleted.investments]);
+
+  React.useEffect(() => {
+    if (section === "interest" && !sectionsCompleted.interest) {
+      const timer = setTimeout(() => {
+        handleSectionComplete("interest");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [section, sectionsCompleted.interest]);
+
   const handleAnswerChange = (option) => {
     setQuizAnswers(prev => ({ ...prev, [currentQuestion]: option }));
   };
@@ -218,12 +273,40 @@ const Literacy = () => {
     else if (percent >= 50) xp = 30;
     setXpEarned(xp);
     setQuizSubmitted(true);
+
+    // Mark quiz as completed
+    if (!sectionsCompleted.quiz) {
+      setSectionsCompleted(prev => ({
+        ...prev,
+        quiz: true
+      }));
+    }
   };
 
   const renderMenu = () => (
     <div className="menu-section">
       <div className="menu-content">
         <h2 className="menu-title">Select a Financial Knowledge Section</h2>
+
+        {/* Aura Progress Display */}
+        <div className="aura-progress">
+          <div className="aura-total">
+            <span className="aura-icon">✨</span>
+            <span className="aura-count">{xpEarned} Aura</span>
+          </div>
+          <div className="progress-badges">
+            {sectionsCompleted.investments && (
+              <div className="badge completed">Investments ✓</div>
+            )}
+            {sectionsCompleted.interest && (
+              <div className="badge completed">Interest ✓</div>
+            )}
+            {sectionsCompleted.quiz && (
+              <div className="badge completed">Quiz ✓</div>
+            )}
+          </div>
+        </div>
+
         <div className="menu-buttons">
           <button className="menu-btn" onClick={() => setSection("investments")}>
             <div className="menu-btn-icon">
@@ -234,6 +317,11 @@ const Literacy = () => {
             <div className="menu-btn-content">
               <div className="menu-btn-title">Investments</div>
               <div className="menu-btn-desc">Learn about different investment options</div>
+              {sectionsCompleted.investments ? (
+                <div className="section-completed">+10 Aura Earned!</div>
+              ) : (
+                <div className="section-reward">Complete to earn +10 Aura</div>
+              )}
             </div>
           </button>
           <button className="menu-btn" onClick={() => setSection("interest")}>
@@ -246,6 +334,11 @@ const Literacy = () => {
             <div className="menu-btn-content">
               <div className="menu-btn-title">Interest</div>
               <div className="menu-btn-desc">Understand simple & compound interest</div>
+              {sectionsCompleted.interest ? (
+                <div className="section-completed">+5 Aura Earned!</div>
+              ) : (
+                <div className="section-reward">Complete to earn +5 Aura</div>
+              )}
             </div>
           </button>
           <button className="menu-btn" onClick={() => setSection("quiz")}>
@@ -259,6 +352,11 @@ const Literacy = () => {
             <div className="menu-btn-content">
               <div className="menu-btn-title">Test Your Knowledge</div>
               <div className="menu-btn-desc">Quiz yourself on financial concepts</div>
+              {sectionsCompleted.quiz ? (
+                <div className="section-completed">Quiz Completed! ✓</div>
+              ) : (
+                <div className="section-reward">Earn up to +50 Aura</div>
+              )}
             </div>
           </button>
         </div>
@@ -454,6 +552,15 @@ const Literacy = () => {
                 <p className="section-desc">Understand key metrics that help you evaluate investment performance and market sentiment.</p>
                 {renderCards(investmentMetrics)}
               </div>
+
+              {!sectionsCompleted.investments && (
+                <div className="completion-notice">
+                  <div className="notice-icon">📚</div>
+                  <div className="notice-text">
+                    <strong>Keep reading!</strong> Complete this section to earn +10 Aura points.
+                  </div>
+                </div>
+              )}
             </div>
           </section>
         );
@@ -465,6 +572,15 @@ const Literacy = () => {
               <h2 className="section-title">Interest Concepts</h2>
               <p className="section-desc">Understand interest, simple interest, compound interest, and compounding periods.</p>
               {renderCards(interestConcepts)}
+
+              {!sectionsCompleted.interest && (
+                <div className="completion-notice">
+                  <div className="notice-icon">📚</div>
+                  <div className="notice-text">
+                    <strong>Keep reading!</strong> Complete this section to earn +5 Aura points.
+                  </div>
+                </div>
+              )}
             </div>
           </section>
         );
@@ -478,6 +594,145 @@ const Literacy = () => {
   return (
     <div className="literacy-container">
       <style>{`
+        .aura-progress {
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(248, 250, 248, 0.9) 100%
+          );
+          border: 2px solid rgba(143, 174, 109, 0.2);
+          border-radius: 16px;
+          padding: 1.5rem;
+          margin-bottom: 2rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .aura-total {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .aura-icon {
+          font-size: 1.5rem;
+        }
+        
+        .aura-count {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #7a9b5b;
+        }
+        
+        .progress-badges {
+          display: flex;
+          justify-content: center;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+        }
+
+        .badge {
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          border: 2px solid rgba(143, 174, 109, 0.3);
+        }
+        
+        .badge.completed {
+          background: rgba(143, 174, 109, 0.15);
+          color: #7a9b5b;
+        }
+
+        .section-completed {
+          color: #7a9b5b;
+          font-weight: 600;
+          font-size: 0.9rem;
+          margin-top: 0.5rem;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+        
+        .section-reward {
+          color: #64748b;
+          font-weight: 500;
+          font-size: 0.9rem;
+          margin-top: 0.5rem;
+        }
+
+        .completion-notice {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          background: linear-gradient(135deg, 
+            rgba(143, 174, 109, 0.1) 0%, 
+            rgba(122, 155, 91, 0.05) 100%
+          );
+          border: 2px solid rgba(143, 174, 109, 0.3);
+          border-radius: 16px;
+          padding: 1.5rem;
+          margin-top: 2rem;
+          backdrop-filter: blur(10px);
+        }
+        
+        .notice-icon {
+          font-size: 2rem;
+          flex-shrink: 0;
+        }
+
+        .notice-text {
+          color: #475569;
+          line-height: 1.5;
+        }
+        
+        .aura-reward-notification {
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          background: linear-gradient(135deg, #8fae6d, #7a9b5b);
+          color: white;
+          padding: 1rem 1.5rem;
+          border-radius: 12px;
+          box-shadow: 0 8px 24px rgba(143, 174, 109, 0.4);
+          z-index: 1000;
+          animation: slideInRight 0.5s ease, slideOutRight 0.5s ease 2.5s forwards;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        @keyframes slideInRight {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        
+        @keyframes slideOutRight {
+          from {
+            transform: translateX(0);
+            opacity: 1;
+          }
+          to {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+        }
+
+        .reward-icon {
+          font-size: 1.5rem;
+        }
+        
+        .reward-text {
+          font-weight: 600;
+        }
+
         .literacy-container {
           min-height: 100vh;
           background: linear-gradient(135deg, 
@@ -1169,10 +1424,17 @@ const Literacy = () => {
         }
       `}</style>
 
+      {/* Aura Reward Notification */}
+      {showAuraReward && (
+        <div className="aura-reward-notification">
+          <span className="reward-icon">✨</span>
+          <span className="reward-text">+{auraRewardAmount} Aura Earned!</span>
+        </div>
+      )}
+
       <div className="content-wrapper">
         <header className="header-section">
           <div className="header-decoration"></div>
-          {/*<div className="main-logo">R</div>*/}
           <h1 className="main-title">Financial Education Center</h1>
           <p className="main-subtitle">
             Master your finances with practical South African examples, from safe savings to bold investments. 
