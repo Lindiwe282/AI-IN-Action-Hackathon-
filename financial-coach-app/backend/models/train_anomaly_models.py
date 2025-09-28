@@ -6,7 +6,7 @@ import joblib
 import os
 
 # Load large synthetic dataset
-df = pd.read_csv("data/synthetic_fraud_dataset_large.csv")
+df = pd.read_csv("../data/synthetic_fraud_dataset_large.csv")
 
 # Define feature groups for layers
 layers = {

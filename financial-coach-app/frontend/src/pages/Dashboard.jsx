@@ -778,7 +778,7 @@ const Dashboard = () => {
                             transition: 'all 0.3s ease'
                           }}
                         >
-                          <IconComponent sx={{ fontSize: 36 }} />
+                          {React.createElement(IconComponent, { sx: { fontSize: 36 } })}
                         </Avatar>
                         <Chip
                           className="feature-badge"

@@ -41,9 +41,6 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <box>
-          
-        </box>
         <div className="App">
           <Navbar />
           <main style={{ paddingTop: '80px', minHeight: '100vh' }}>

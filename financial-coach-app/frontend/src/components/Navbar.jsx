@@ -131,7 +131,7 @@ const Navbar = () => {
                     key={item.path}
                     color="inherit"
                     onClick={() => navigate(item.path)}
-                    startIcon={<IconComponent sx={{ fontSize: '1.1rem' }} />}
+                    startIcon={React.createElement(IconComponent, { sx: { fontSize: '1.1rem' } })}
                     sx={{
                       minWidth: 'auto',
                       px: 2.5,
@@ -230,7 +230,7 @@ const Navbar = () => {
                         },
                       }}
                     >
-                      <IconComponent sx={{ mr: 2, fontSize: '1.2rem' }} />
+                      {React.createElement(IconComponent, { sx: { mr: 2, fontSize: '1.2rem' } })}
                       <Typography sx={{ fontWeight: active ? 'bold' : 'normal', color: active ? '#6b8e47' : '#475569' }}>
                         {item.label}
                       </Typography>

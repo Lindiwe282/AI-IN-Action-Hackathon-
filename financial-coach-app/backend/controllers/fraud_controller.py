@@ -2,11 +2,30 @@ import pandas as pd
 import numpy as np
 import joblib
 import re
-from pgmpy.models import DiscreteBayesianNetwork
-from pgmpy.factors.discrete import TabularCPD
-from pgmpy.inference import VariableElimination
-from PyPDF2 import PdfReader
+try:
+    from pgmpy.models import BayesianNetwork
+    from pgmpy.factors.discrete import TabularCPD
+    from pgmpy.inference import VariableElimination
+    PGMPY_AVAILABLE = True
+except ImportError:
+    try:
+        from pgmpy.models import DiscreteBayesianNetwork as BayesianNetwork
+        from pgmpy.factors.discrete import TabularCPD
+        from pgmpy.inference import VariableElimination
+        PGMPY_AVAILABLE = True
+    except ImportError:
+        PGMPY_AVAILABLE = False
+        print("Warning: pgmpy not available, Bayesian network features will be disabled")
+
+try:
+    from PyPDF2 import PdfReader
+    PYPDF2_AVAILABLE = True
+except ImportError:
+    PYPDF2_AVAILABLE = False
+    print("Warning: PyPDF2 not available, PDF processing will be disabled")
+
 from flask import request, jsonify
+from controllers.phishing_controller import PhishingController
 
 class FraudController:
     def __init__(self):
@@ -22,15 +41,47 @@ class FraudController:
         }
 
         # Load models & scalers
-        self.models = {layer: joblib.load(f"models/{layer}_model.pkl") for layer in self.layers}
-        self.scalers = {layer: joblib.load(f"models/{layer}_scaler.pkl") for layer in self.layers}
+        try:
+            self.models = {layer: joblib.load(f"models/{layer}_model.pkl") for layer in self.layers}
+            self.scalers = {layer: joblib.load(f"models/{layer}_scaler.pkl") for layer in self.layers}
+        except FileNotFoundError as e:
+            print(f"Model file not found: {e}")
+            # Create dummy models if files don't exist
+            self.models = {}
+            self.scalers = {}
+        except Exception as e:
+            print(f"Error loading models: {e}")
+            self.models = {}
+            self.scalers = {}
 
         # Load dataset & compute anomaly indicators
-        self.data = pd.read_csv("data/synthetic_fraud_dataset_large.csv")
-        self._build_anomaly_indicators()
+        try:
+            self.data = pd.read_csv("data/synthetic_fraud_dataset_large.csv")
+            if self.models and self.scalers:
+                self._build_anomaly_indicators()
+        except FileNotFoundError as e:
+            print(f"Dataset file not found: {e}")
+            self.data = None
+        except Exception as e:
+            print(f"Error loading dataset: {e}")
+            self.data = None
 
         # Build Bayesian network
-        self._build_bayesian_network()
+        if PGMPY_AVAILABLE and self.data is not None:
+            self._build_bayesian_network()
+        else:
+            self.bn_model = None
+            self.infer = None
+        
+        # Initialize phishing controller
+        try:
+            # The model file is in the backend root directory
+            self.phishing_controller = PhishingController("hybrid_phishing_components.pkl")
+            print("✅ PhishingController initialized successfully")
+        except Exception as e:
+            print(f"❌ Warning: Could not initialize PhishingController: {e}")
+            print("This means phishing detection will not be available")
+            self.phishing_controller = None
 
     # --------------------------------------------------------------
     def _extract_amounts_from_text(self, text: str):
@@ -59,9 +110,10 @@ class FraudController:
         words = text.split()
 
         try:
-            with open("data/suspecious_keywords.txt") as f:
+            with open("data/suspicious_keywords.txt") as f:
                 suspicious_words = [w.strip().lower() for w in f]
         except FileNotFoundError:
+            print("Warning: suspicious_keywords.txt not found, using empty list")
             suspicious_words = []
 
         susp_count = sum(word in suspicious_words for word in words)
@@ -96,7 +148,11 @@ class FraudController:
 
     # --------------------------------------------------------------
     def _build_bayesian_network(self):
-        self.bn_model = DiscreteBayesianNetwork([
+        if not PGMPY_AVAILABLE:
+            print("Warning: Bayesian network disabled - pgmpy not available")
+            return
+            
+        self.bn_model = BayesianNetwork([
             ("Transaction_Anomaly", "Fraud"),
             ("Document_Anomaly", "Fraud"),
             ("Behavior_Anomaly", "Fraud"),
@@ -134,31 +190,89 @@ class FraudController:
         return {"fraud_probability": round(prob, 2), "is_fraud": prob > 0.5}
 
     # --------------------------------------------------------------
-    def analyze_pdf(self, pdf_path, amount=0, interest_rate=0, promised_return=0):
-        reader = PdfReader(pdf_path)
-        text = "".join(page.extract_text() or "" for page in reader.pages)
+    def analyze_pdf(self, pdf_file, amount=0, interest_rate=0, promised_return=0):
+        if not PYPDF2_AVAILABLE:
+            return {
+                "fraud_probability": 0.5,
+                "is_fraud": False,
+                "red_flags": ["PDF processing not available - PyPDF2 not installed"]
+            }
+        
+        # Handle both file path (string) and file object
+        try:
+            if isinstance(pdf_file, str):
+                # It's a file path
+                reader = PdfReader(pdf_file)
+            else:
+                # It's a file object from request
+                reader = PdfReader(pdf_file)
+            
+            text = "".join(page.extract_text() or "" for page in reader.pages)
+        except Exception as e:
+            return {
+                "fraud_probability": 0.5,
+                "is_fraud": False,
+                "red_flags": [f"Error reading PDF: {str(e)}"]
+            }
 
         # --- Extract numeric values from form data ---
         try:
             if amount == 0 and interest_rate == 0 and promised_return == 0:
                 amount, interest_rate, promised_return = self._extract_amounts_from_text(text)
-            interest_rate = float(interest_rate/100)
-            promised_return = float(promised_return/100)
+            interest_rate = float(interest_rate/100) if interest_rate > 1 else float(interest_rate)
+            promised_return = float(promised_return/100) if promised_return > 1 else float(promised_return)
         except ValueError:
             amount, interest_rate, promised_return = 0.0, 0.0, 0.0
 
         # --- Extract features ---
         features = self.extract_features_from_pdf(text, amount, interest_rate, promised_return)
 
+        # Check if models are available
+        if not self.models or not self.scalers:
+            # Simple rule-based approach when ML models are not available
+            red_flags = []
+            anomaly_count = 0
+            
+            # Simple rules for fraud detection
+            if amount > 1000000 or amount < 100:
+                red_flags.append(f"Unusual investment amount: {amount}")
+                anomaly_count += 1
+                
+            if interest_rate > 0.35 or promised_return > 0.30:
+                red_flags.append(f"Unrealistic returns promised: Interest={interest_rate*100}%, Return={promised_return*100}%")
+                anomaly_count += 1
+                
+            if features['suspicious_words_count'] > 5:
+                red_flags.append(f"High number of suspicious keywords detected: {features['suspicious_words_count']}")
+                anomaly_count += 1
+                
+            if features['urgency_terms_count'] > 2:
+                red_flags.append(f"Multiple urgency terms detected: {features['urgency_terms_count']}")
+                anomaly_count += 1
+            
+            fraud_prob = min(anomaly_count * 0.25, 1.0)
+            
+            result = {
+                "fraud_probability": round(fraud_prob, 2),
+                "is_fraud": fraud_prob > 0.5,
+                "red_flags": red_flags
+            }
+            
+            return {**result, **features}
+
         # --- Compute anomalies for each layer ---
         evidence = {}
         red_flags = []
 
         for layer, feats in self.layers.items():
-            X_layer = pd.DataFrame([[features[f] for f in feats]], columns=feats)
-            X_scaled = self.scalers[layer].transform(X_layer)
-            anomaly = int(self.models[layer].predict(X_scaled)[0] == -1)
-            evidence[f"{layer}_Anomaly"] = anomaly
+            try:
+                X_layer = pd.DataFrame([[features[f] for f in feats]], columns=feats)
+                X_scaled = self.scalers[layer].transform(X_layer)
+                anomaly = int(self.models[layer].predict(X_scaled)[0] == -1)
+                evidence[f"{layer}_Anomaly"] = anomaly
+            except Exception as e:
+                print(f"Error processing layer {layer}: {e}")
+                evidence[f"{layer}_Anomaly"] = 0
 
             # --- Build red flags ---
             if anomaly:
@@ -202,18 +316,102 @@ class FraudController:
 
     # --------------------------------------------------------------
     def detect_fraud_route(self):
-        if 'pdf' not in request.files:
-            return jsonify({"error": "No PDF uploaded"}), 400
-
-        pdf_file = request.files['pdf']
-
-        # Get numeric inputs from form
         try:
-            amount = float(request.form.get('amount', 0))
-            interest_rate = float(request.form.get('interest_rate', 0))
-            promised_return = float(request.form.get('promised_return', 0))
-        except ValueError:
-            return jsonify({"error": "Invalid numeric input"}), 400
+            if 'pdf' not in request.files:
+                return jsonify({"error": "No PDF uploaded"}), 400
 
-        result = self.analyze_pdf(pdf_file, amount, interest_rate, promised_return)
-        return jsonify(result)
+            pdf_file = request.files['pdf']
+            
+            if pdf_file.filename == '':
+                return jsonify({"error": "No file selected"}), 400
+
+            # Get numeric inputs from form
+            try:
+                amount = float(request.form.get('amount', 0))
+                interest_rate = float(request.form.get('interest_rate', 0))
+                promised_return = float(request.form.get('promised_return', 0))
+            except ValueError:
+                return jsonify({"error": "Invalid numeric input"}), 400
+
+            result = self.analyze_pdf(pdf_file, amount, interest_rate, promised_return)
+            return jsonify(result)
+        
+        except Exception as e:
+            print(f"Error in detect_fraud_route: {str(e)}")
+            return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+
+    def detect_phishing_route(self):
+        """Route for detecting phishing in text or URLs"""
+        try:
+            # Check if phishing controller is available
+            if not self.phishing_controller:
+                return jsonify({
+                    "error": "Phishing detection not available", 
+                    "risk_score": 0.5,
+                    "is_phishing": False,
+                    "details": "PhishingController not initialized"
+                }), 503
+            
+            # Get text and URL inputs from form data
+            text_input = request.form.get('text', '').strip()
+            url_input = request.form.get('url', '').strip()
+            
+            if not text_input and not url_input:
+                return jsonify({
+                    "error": "No text or URL provided for analysis",
+                    "risk_score": 0.0,
+                    "is_phishing": False
+                }), 400
+            
+            print(f"Processing phishing detection...")
+            print(f"URL input: {url_input if url_input else 'None'}")
+            print(f"Text input: {text_input[:100] if text_input else 'None'}...")
+            
+            # Use the provided URL and text directly
+            url = url_input if url_input else ""
+            text = text_input if text_input else ""
+            
+            # If only URL is provided, use URL as text too for NLP analysis
+            if url and not text:
+                text = url
+                print(f"Using URL as text for NLP analysis")
+            
+            # If text contains URLs and no separate URL provided, extract URL
+            if text and not url:
+                import re
+                url_pattern = r'https?://[^\s<>"{}|\\^`\[\]]+'
+                urls_found = re.findall(url_pattern, text)
+                if urls_found:
+                    url = urls_found[0]
+                    # Keep the original text for NLP analysis
+                    print(f"Extracted URL from text: {url}")
+            
+            print(f"Final URL for analysis: {url if url else 'None'}")
+            print(f"Final text for analysis: {text[:100] if text else 'None'}...")
+            
+            # Use the phishing controller to predict
+            result = self.phishing_controller.predict(url, text)
+            print(f"Phishing prediction result: {result}")
+            
+            # Format response to match frontend expectations
+            response = {
+                "risk_score": float(result.get('hybrid_prob', 0)),
+                "is_phishing": result.get('prediction') == 'phishing',
+                "ml_probability": float(result.get('ml_prob', 0)),
+                "text_probability": float(result.get('text_prob', 0)),
+                "keywords_detected": result.get('keywords_detected', []),
+                "prediction_details": result.get('prediction', 'unknown')
+            }
+            
+            print(f"Formatted response: {response}")
+            return jsonify(response)
+            
+        except Exception as e:
+            print(f"Error in detect_phishing_route: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return jsonify({
+                "error": f"Internal server error: {str(e)}",
+                "risk_score": 0.5,
+                "is_phishing": False
+            }), 500

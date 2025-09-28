@@ -16,10 +16,17 @@ class PhishingController:
         self.load_model(model_path)
 
     def load_model(self, model_path):
-       
-        self.model = HybridPhishingModel()
-        self.model.load_components(model_path)   # this method rehydrates the class
-        print(f"Components loaded from {model_path}")
+        try:
+            print(f"🔄 Loading phishing model from: {model_path}")
+            self.model = HybridPhishingModel()
+            self.model.load_components(model_path)   # this method rehydrates the class
+            print(f"✅ Phishing model components loaded successfully from {model_path}")
+        except FileNotFoundError:
+            print(f"❌ Model file not found: {model_path}")
+            raise
+        except Exception as e:
+            print(f"❌ Error loading phishing model: {e}")
+            raise
 
 
     def extract_url_features(self, url):
@@ -77,16 +84,16 @@ class PhishingController:
         # Prediction
         prediction = 'phishing' if hybrid_prob >= 0.5 else 'legitimate'
 
-        # Detected keywords
+        # Detected keywords - return full information (keyword, category, advice)
         text_lower = text.lower()
         keywords_detected = [kw for kw in self.model.suspicious_keywords if kw in text_lower]
         masked_keywords = HybridPhishingModel.map_key_words_to_meaning_safe(keywords_detected, show_masked=True)
-
+        
         return {
             'prediction': prediction,
             'ml_prob': ml_prob,
             'text_prob': text_prob,
             'hybrid_prob': hybrid_prob,
-            'keywords_detected': masked_keywords
+            'keywords_detected': masked_keywords  # Return full objects with keyword, category, advice
         }
 

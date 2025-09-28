@@ -15,6 +15,7 @@ import {
   Eye,
   BarChart3
 } from "lucide-react";
+import axios from 'axios';
 
 const FraudCheck = () => {
   const [pdfFile, setPdfFile] = useState(null);
@@ -24,6 +25,7 @@ const FraudCheck = () => {
   const [fraudResult, setFraudResult] = useState(null);
 
   const [phishingInput, setPhishingInput] = useState("");
+  const [phishingUrl, setPhishingUrl] = useState("");
   const [phishingResult, setPhishingResult] = useState(null);
 
   const [loadingFraud, setLoadingFraud] = useState(false);
@@ -43,46 +45,62 @@ const FraudCheck = () => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append('pdf', pdfFile);
+    formData.append('amount', amount || 0);
+    formData.append('interest_rate', interestRate || 0);
+    formData.append('promised_return', promisedReturn || 0);
+
     setLoadingFraud(true);
-    
-    // Simulate API call with demo data
-    setTimeout(() => {
-      const mockResult = {
-        fraud_probability: Math.random() > 0.7 ? 0.85 : 0.15,
-        is_fraud: Math.random() > 0.7,
-        red_flags: Math.random() > 0.5 ? [
-          "Unusually high promised returns compared to market standards",
-          "Lack of proper regulatory documentation",
-          "Pressure tactics for immediate investment"
-        ] : []
-      };
-      setFraudResult(mockResult);
-      setLoadingFraud(false);
-    }, 2000);
+    try {
+      const res = await axios.post(
+        'http://localhost:5000/api/fraud/detect',
+        formData,
+        { timeout: 30000 }
+      );
+      setFraudResult(res.data);
+    } catch (error) {
+      console.error(error);
+      alert('Error analyzing the PDF. Make sure backend is running.');
+    }
+    setLoadingFraud(false);
   };
 
   const handleSubmitPhishing = async () => {
-    if (!phishingInput) {
-      alert("Please enter text or a link to check for phishing.");
+    if (!phishingInput && !phishingUrl) {
+      alert("Please enter text or a URL to check for phishing.");
       return;
     }
 
+    const formData = new FormData();
+    formData.append('text', phishingInput);
+    formData.append('url', phishingUrl);
+
     setLoadingPhish(true);
-    
-    // Simulate API call with demo data
-    setTimeout(() => {
-      const hasPhishingKeywords = phishingInput.toLowerCase().includes('urgent') || 
-                                  phishingInput.toLowerCase().includes('click here') ||
-                                  phishingInput.toLowerCase().includes('verify account') ||
-                                  phishingInput.toLowerCase().includes('suspended');
+    try {
+      console.log("Sending phishing request to:", 'http://localhost:5000/api/fraud/phishing/detect');
+      console.log("Request data - Text:", phishingInput);
+      console.log("Request data - URL:", phishingUrl);
       
-      const mockResult = {
-        risk_score: hasPhishingKeywords ? 0.9 : Math.random() * 0.3,
-        is_phishing: hasPhishingKeywords || Math.random() > 0.8
-      };
-      setPhishingResult(mockResult);
-      setLoadingPhish(false);
-    }, 1500);
+      const res = await axios.post(
+        'http://localhost:5000/api/fraud/phishing/detect',
+        formData,
+        { timeout: 30000 }
+      );
+      
+      console.log("Phishing response:", res.data);
+      setPhishingResult(res.data);
+    } catch (error) {
+      console.error("Phishing API Error:", error);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        alert(`Error: ${error.response.status} - ${error.response.data.error || 'Unknown error'}`);
+      } else {
+        console.error("Network error:", error.message);
+        alert('Error analyzing the data. Make sure backend is running.');
+      }
+    }
+    setLoadingPhish(false);
   };
 
   const resetForm = () => {
@@ -92,6 +110,7 @@ const FraudCheck = () => {
     setPromisedReturn("");
     setFraudResult(null);
     setPhishingInput("");
+    setPhishingUrl("");
     setPhishingResult(null);
   };
 
@@ -572,26 +591,47 @@ const FraudCheck = () => {
         {/* Phishing Detection */}
         <div className="card">
           <h2 className="card-title">Phishing & Scam Detection</h2>
-          <div style={{ position: 'relative' }}>
-            <Link size={20} style={{ position: 'absolute', left: '1rem', top: '1.5rem', color: '#6b8e47', zIndex: 1 }} />
-            <textarea
-              placeholder="Paste suspicious text, email content, or website link here for analysis..."
-              value={phishingInput}
-              onChange={e => setPhishingInput(e.target.value)}
-              className="input-field"
-              rows={5}
-              style={{ resize: 'vertical', minHeight: '120px', paddingLeft: '3rem' }}
-            />
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            {/* URL Input */}
+            <div style={{ position: 'relative' }}>
+              <Link size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b8e47', zIndex: 1 }} />
+              <input
+                type="url"
+                placeholder="Enter suspicious URL (e.g., https://suspicious-site.com)"
+                value={phishingUrl}
+                onChange={e => setPhishingUrl(e.target.value)}
+                className="input-field"
+                style={{ paddingLeft: '3rem' }}
+              />
+            </div>
+            
+            {/* Text Input */}
+            <div style={{ position: 'relative', gridColumn: 'span 2' }}>
+              <Mail size={20} style={{ position: 'absolute', left: '1rem', top: '1.5rem', color: '#6b8e47', zIndex: 1 }} />
+              <textarea
+                placeholder="Paste suspicious email content, message text, or any other content here for analysis..."
+                value={phishingInput}
+                onChange={e => setPhishingInput(e.target.value)}
+                className="input-field"
+                rows={4}
+                style={{ resize: 'vertical', minHeight: '120px', paddingLeft: '3rem' }}
+              />
+            </div>
+          </div>
+          
+          <div style={{ background: 'rgba(135, 169, 107, 0.1)', padding: '1rem', borderRadius: '12px', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#6b8e47' }}>
+            <strong>💡 How it works:</strong> You can analyze URLs, text content, or both together. Our AI combines URL structure analysis with text pattern recognition for comprehensive phishing detection.
           </div>
           
           <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
             <button 
               className="btn btn-primary" 
               onClick={handleSubmitPhishing} 
-              disabled={loadingPhish || !phishingInput}
+              disabled={loadingPhish || (!phishingInput && !phishingUrl)}
             >
               <Eye size={20} />
-              {loadingPhish ? "Checking..." : "Check for Phishing"}
+              {loadingPhish ? "Analyzing..." : "Analyze for Phishing"}
             </button>
           </div>
           
@@ -619,6 +659,61 @@ const FraudCheck = () => {
                   )}
                 </div>
                 <div className="stat-label">Assessment</div>
+              </div>
+              
+              {/* Additional Details */}
+              {(phishingResult.ml_probability !== undefined || phishingResult.text_probability !== undefined) && (
+                <>
+                  <div className="stat-card">
+                    <div className="stat-value">
+                      <Target size={24} />
+                      {(phishingResult.ml_probability * 100).toFixed(1)}%
+                    </div>
+                    <div className="stat-label">URL Analysis</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-value">
+                      <FileText size={24} />
+                      {(phishingResult.text_probability * 100).toFixed(1)}%
+                    </div>
+                    <div className="stat-label">Content Analysis</div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+          
+          {/* Suspicious Patterns Detected */}
+          {phishingResult?.keywords_detected && phishingResult.keywords_detected.length > 0 && (
+            <div className="red-flags">
+              <h4 style={{ margin: '0 0 1rem 0', color: '#dc2626', display: 'flex', alignItems: 'center' }}>
+                <AlertTriangle size={20} style={{ marginRight: '0.5rem' }} />
+                Suspicious Patterns Detected:
+              </h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0.75rem' }}>
+                {phishingResult.keywords_detected.map((item, idx) => (
+                  <div key={idx} style={{ 
+                    background: 'rgba(239, 68, 68, 0.1)', 
+                    padding: '1rem', 
+                    borderRadius: '8px',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                    fontSize: '0.9rem'
+                  }}>
+                    <div style={{ fontWeight: '600', color: '#dc2626', marginBottom: '0.5rem' }}>
+                      {typeof item === 'object' && item.category ? item.category : String(item)}
+                    </div>
+                    {typeof item === 'object' && item.keyword && (
+                      <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>
+                        Detected: {item.keyword}
+                      </div>
+                    )}
+                    {typeof item === 'object' && item.advice && (
+                      <div style={{ fontSize: '0.8rem', color: '#555', fontStyle: 'italic' }}>
+                        {item.advice}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           )}
