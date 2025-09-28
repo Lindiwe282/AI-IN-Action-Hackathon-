@@ -1014,7 +1014,7 @@ const Literacy = () => {
       <div className="content-wrapper">
         <header className="header-section">
           <div className="header-decoration"></div>
-          <div className="main-logo">₹</div>
+          {/*<div className="main-logo">R</div>*/}
           <h1 className="main-title">Financial Education Center</h1>
           <p className="main-subtitle">
             Master your finances with practical South African examples, from safe savings to bold investments. 

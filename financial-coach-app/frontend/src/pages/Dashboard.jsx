@@ -106,13 +106,13 @@ const FEATURES = [
 
 const FINANCIAL_FACTS = [
   {
-    fact: 'Simple Interest: Calculated only on the principal. SI = P × R × T.',
+    fact: 'Simple Interest: Calculated only on the principal. Simple Interest = Principal × Rate × Time.',
     category: 'Basic Concepts',
     difficulty: 'Beginner',
     icon: '💰'
   },
   {
-    fact: 'Compound Interest: Calculated on principal + accumulated interest. CI = P × (1 + R/n)^(n×T) - P.',
+    fact: 'Compound Interest: Calculated on principal + accumulated interest. Compound Interest = Principal × (1 + Rate/Number of times interest applied per year)^(Number of times interest applied per year×Years) - Principal.',
     category: 'Investing',
     difficulty: 'Intermediate',
     icon: '📈'
