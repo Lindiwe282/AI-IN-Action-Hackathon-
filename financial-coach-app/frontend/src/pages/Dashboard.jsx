@@ -23,9 +23,24 @@ import { apiEndpoints } from '../services/api';
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [healthStatus, setHealthStatus] = useState(null);
+  const [fact, setFact] = useState('');
+
+  //fun facts to encourage learning
+  const financialFacts = [
+    'Simple Interest: Calculated only on the principal. SI = P × R × T.',
+    'Compound Interest: Calculated on principal + accumulated interest. CI = P × (1 + R/n)^(n×T) - P.',
+    'Compounding Periods: Defines how often interest is applied: annually, quarterly, monthly, etc.',
+    'Investment: Putting money to work to earn more money, balancing safety and growth potential.',
+    'Savings Account: Low-risk, bank-provided account that earns interest steadily.',
+    'Government Bonds: Loans to the government with fixed interest, very safe for conservative investors.',
+  ];
 
   useEffect(() => {
     checkApiHealth();
+
+    //choose a random fact to display
+    const randomIndex = Math.floor(Math.random() * financialFacts.length);
+    setFact(financialFacts[randomIndex]);
   }, []);
 
   const checkApiHealth = async () => {
@@ -113,7 +128,27 @@ const Dashboard = () => {
         <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
           Your AI-powered personal finance assistant
         </Typography>
-        
+
+        {/*Random Fact Card*/}
+        <Paper
+          sx={{
+            maxWidth: 600,
+            mx: 'auto',
+            mb: 3,
+            p: 2,
+            backgroundColor: '#e3f2fd',
+            borderLeft: '6px solid #1976d2',
+          }}
+          elevation={3}
+        >
+          <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+            Financial Fact
+          </Typography>
+          <Typography variant="body2">
+            {fact}
+          </Typography>
+        </Paper>
+
         {/* API Status */}
         <Paper
           sx={{
@@ -125,7 +160,6 @@ const Dashboard = () => {
           }}
         >
           <Typography variant="body2">
-            API Status: {healthStatus?.status === 'healthy' ? '🟢 Online' : '🔴 Offline'}
           </Typography>
           {healthStatus?.message && (
             <Typography variant="body2" color="text.secondary">
