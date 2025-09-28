@@ -10,7 +10,8 @@ import {
   TrendingUp, SearchRounded, Add, Delete, Analytics, ShowChart, 
   PieChart as PieIcon, AccountBalance, TrendingDown, Refresh,
   PlayCircle, StopCircle, CheckCircle, Error, Visibility, Close,
-  NewspaperOutlined, SignalCellularAlt, Info, AutoGraph, TipsAndUpdates
+  NewspaperOutlined, SignalCellularAlt, Info, AutoGraph, TipsAndUpdates,
+  Security
 } from '@mui/icons-material';
 import { 
   PieChart, Cell, Pie, LineChart, Line, XAxis, YAxis, CartesianGrid, 
@@ -600,6 +601,18 @@ const Investment = () => {
                 label="Connected"
                 status="connected"
               />
+              <Button
+                variant="contained"
+                startIcon={<Security />}
+                onClick={() => navigate('/hedge-investments')}
+                sx={{
+                  borderRadius: 3,
+                  textTransform: 'none',
+                  background: 'linear-gradient(45deg, #2196f3 30%, #4caf50 90%)',
+                }}
+              >
+                Hedge Investments
+              </Button>
               <Button
                 variant="contained"
                 startIcon={<NewspaperOutlined />}

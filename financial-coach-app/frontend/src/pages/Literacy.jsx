@@ -59,6 +59,61 @@ const Literacy = () => {
     },
   ];
 
+  const investmentMetrics = [
+    {
+      title: "Sharpe Ratio - Your 'Bang for Your Buck' Score",
+      level: "Investment Efficiency",
+      desc: "Think of the Sharpe ratio like an efficiency rating for your investments. It's like comparing cars by their miles per gallon - it tells you how much return you're getting for the risk you're taking.",
+      examples: [
+        "Simple Analogy: Imagine you're choosing between two roller coasters:",
+        "• Roller Coaster A: Gives you 10 units of thrill but is very scary (high risk)",
+        "• Roller Coaster B: Gives you 8 units of thrill but is only moderately scary (lower risk)",
+        "Roller Coaster B has a better 'thrill-to-fear' ratio - that's essentially what Sharpe ratio measures for investments!"
+      ],
+      gradient: "sage-medium",
+      scores: [
+        { range: "🟢 Excellent Score (Above 1.0)", meaning: "You're getting great returns for the risk you're taking", example: "Like finding a high-paying job that's also low-stress", action: "Your portfolio is performing very well" },
+        { range: "🟡 Okay Score (0.5 - 1.0)", meaning: "Decent returns, but you might be taking too much risk", example: "Like a job that pays well but is very stressful", action: "Consider adjusting your strategy" },
+        { range: "🔴 Poor Score (Below 0.5)", meaning: "You're taking a lot of risk but not getting enough reward", example: "Like a stressful job that doesn't pay well", action: "Your strategy needs improvement" }
+      ]
+    },
+    {
+      title: "Sentiment Score - The 'Market Mood' Meter",
+      level: "Market Psychology",
+      desc: "Sentiment analysis is like taking the emotional temperature of the financial news. It reads thousands of news articles and social media posts to figure out whether people are feeling optimistic or pessimistic about a stock.",
+      examples: [
+        "Simple Analogy: Imagine you're trying to decide whether to go to a new restaurant. You read online reviews:",
+        "• Lots of 5-star reviews saying 'Amazing food!' = Positive sentiment",
+        "• Lots of 1-star reviews saying 'Terrible service!' = Negative sentiment",
+        "• Mixed reviews = Neutral sentiment"
+      ],
+      gradient: "sage-forest",
+      scores: [
+        { range: "Super Positive (0.35 and above)", meaning: "Almost everyone is saying great things about this stock", example: "A restaurant with 95% five-star reviews", action: "STRONG BUY - People are very optimistic", color: "Bright Green" },
+        { range: "Pretty Positive (0.15 to 0.34)", meaning: "Most people are saying good things", example: "A restaurant with mostly 4-star reviews", action: "BUY - Generally positive vibes", color: "Light Blue" },
+        { range: "Neutral (-0.14 to 0.14)", meaning: "People are unsure or opinions are mixed", example: "A restaurant with mixed 3-star reviews", action: "HOLD - Wait and see what happens", color: "Yellow" },
+        { range: "Pretty Negative (-0.15 to -0.34)", meaning: "Most people are concerned or pessimistic", example: "A restaurant with mostly 2-star reviews", action: "SELL - People are worried", color: "Orange" },
+        { range: "Very Negative (-0.35 and below)", meaning: "Almost everyone is saying bad things", example: "A restaurant with mostly 1-star reviews", action: "STRONG SELL - People are very pessimistic", color: "Red" }
+      ]
+    },
+    {
+      title: "Why These Scores Matter",
+      level: "Smart Investing",
+      desc: "Using Sharpe Ratio and Sentiment Score together helps you make better investment decisions by combining performance data with market psychology.",
+      examples: [
+        "Sharpe Ratio: Helps you understand if you're being smart with your money. A higher score means you're getting good returns without taking unnecessary risks.",
+        "Sentiment Score: Helps you understand what other people think. If everyone is excited about a stock (high positive sentiment), the price might go up. If everyone is worried (negative sentiment), the price might go down."
+      ],
+      gradient: "sage-dark",
+      scenarios: [
+        { situation: "Best scenario", description: "High Sharpe ratio (good performance) + Positive sentiment (people are optimistic) = Strong investment opportunity" },
+        { situation: "Worst scenario", description: "Low Sharpe ratio (poor performance) + Negative sentiment (people are pessimistic) = Avoid this investment" },
+        { situation: "Mixed signals", description: "Use caution and do more research" }
+      ],
+      summary: "Think of it like this: Sharpe ratio tells you how well the investment has been performing, while sentiment tells you how people currently feel about its future. Both pieces of information help you make better decisions!"
+    }
+  ];
+
   const interestConcepts = [
     {
       title: "What is Interest?",
@@ -70,7 +125,6 @@ const Literacy = () => {
       title: "Simple Interest",
       desc: "Calculated only on the original principal amount. Formula: Simple Interest = Principal × Rate × Time.",
       examples: [
-        "Loan Example: Borrow R10,000 at 10% per year for 3 years → Interest = R3,000",
         "Investment Example: Deposit R5,000 at 6% for 2 years → Interest = R600"
       ],
       gradient: "sage-medium"
@@ -79,8 +133,7 @@ const Literacy = () => {
       title: "Compound Interest",
       desc: "Calculated on the principal amount plus any accumulated interest. Formula: Compound Interest = Principal × (1 + Rate / Number of times interest applied per year)^(Number of times interest applied × Years) - Principal.",
       examples: [
-        "Investment: R5,000 at 6% annually, compounded quarterly for 2 years → ≈ R636 interest",
-        "Loan: R10,000 at 10% annually, compounded monthly for 3 years → ≈ R3,347 interest"
+        "Investment: R5,000 at 6% annually, compounded quarterly for 2 years → ≈ R636 interest"
       ],
       gradient: "sage-dark"
     },
@@ -88,8 +141,7 @@ const Literacy = () => {
       title: "Compounding Periods",
       desc: "How often interest is applied: annually, semi-annually, quarterly, monthly, daily. More frequent compounding increases total interest.",
       examples: [
-        "Monthly vs annually: R5,000 at 6% compounded monthly earns more than annually",
-        "Short-term loan compounded daily accumulates more interest than monthly"
+        "Monthly vs annually: R5,000 at 6% compounded monthly earns more than annually"
       ],
       gradient: "sage-forest"
     }
@@ -226,6 +278,37 @@ const Literacy = () => {
           {item.examples && item.examples.map((ex, i) => (
             <div key={i} className="card-example">{ex}</div>
           ))}
+          {item.scores && (
+            <div className="score-section">
+              <h5 className="score-title">How to Read the Scores:</h5>
+              {item.scores.map((score, scoreIdx) => (
+                <div key={scoreIdx} className="score-item">
+                  <div className="score-range">{score.range}</div>
+                  <div className="score-details">
+                    <strong>What it means:</strong> {score.meaning}<br/>
+                    <strong>Real-world example:</strong> {score.example}<br/>
+                    <strong>Investment meaning:</strong> {score.action}
+                    {score.color && <><br/><strong>Color:</strong> {score.color}</>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {item.scenarios && (
+            <div className="scenario-section">
+              <h5 className="scenario-title">Using Them Together:</h5>
+              {item.scenarios.map((scenario, scenarioIdx) => (
+                <div key={scenarioIdx} className="scenario-item">
+                  <strong>{scenario.situation}:</strong> {scenario.description}
+                </div>
+              ))}
+            </div>
+          )}
+          {item.summary && (
+            <div className="summary-section">
+              <div className="card-example">{item.summary}</div>
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -249,8 +332,8 @@ const Literacy = () => {
                   <div className="score-label">Your Score</div>
                 </div>
                 <div className="xp-display">
-                  <div className="xp-number">{xpEarned} XP</div>
-                  <div className="xp-label">Experience Points</div>
+                  <div className="xp-number">+{xpEarned} Aura</div>
+                  <div className="xp-label">Aura Points</div>
                 </div>
               </div>
 
@@ -365,6 +448,12 @@ const Literacy = () => {
               <h2 className="section-title">Investment Types</h2>
               <p className="section-desc">Learn about different types of investments from safe to risky, with South African examples.</p>
               {renderCards(investments, true)}
+              
+              <div className="metrics-section">
+                <h2 className="section-title">Investment Metrics</h2>
+                <p className="section-desc">Understand key metrics that help you evaluate investment performance and market sentiment.</p>
+                {renderCards(investmentMetrics)}
+              </div>
             </div>
           </section>
         );
@@ -570,6 +659,12 @@ const Literacy = () => {
           margin-top: 2rem;
         }
         
+        .metrics-section {
+          margin-top: 4rem;
+          padding-top: 3rem;
+          border-top: 2px solid rgba(143, 174, 109, 0.2);
+        }
+        
         .section-title {
           font-size: 2.5rem;
           font-weight: 700;
@@ -700,6 +795,69 @@ const Literacy = () => {
         
         .card-example:last-child {
           margin-bottom: 0;
+        }
+        
+        .score-section {
+          margin-top: 1.5rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid rgba(143, 174, 109, 0.2);
+        }
+        
+        .score-title {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 1rem;
+        }
+        
+        .score-item {
+          background: rgba(248, 250, 248, 0.8);
+          border: 1px solid rgba(143, 174, 109, 0.2);
+          padding: 1rem;
+          border-radius: 8px;
+          margin-bottom: 1rem;
+        }
+        
+        .score-range {
+          font-weight: 600;
+          color: #1e293b;
+          margin-bottom: 0.5rem;
+          font-size: 1rem;
+        }
+        
+        .score-details {
+          color: #475569;
+          font-size: 0.9rem;
+          line-height: 1.5;
+        }
+        
+        .scenario-section {
+          margin-top: 1.5rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid rgba(143, 174, 109, 0.2);
+        }
+        
+        .scenario-title {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 1rem;
+        }
+        
+        .scenario-item {
+          background: rgba(248, 250, 248, 0.8);
+          border: 1px solid rgba(143, 174, 109, 0.2);
+          padding: 1rem;
+          border-radius: 8px;
+          margin-bottom: 0.75rem;
+          color: #475569;
+          line-height: 1.5;
+        }
+        
+        .summary-section {
+          margin-top: 1.5rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid rgba(143, 174, 109, 0.2);
         }
         
         .quiz-section {
@@ -1014,7 +1172,7 @@ const Literacy = () => {
       <div className="content-wrapper">
         <header className="header-section">
           <div className="header-decoration"></div>
-          <div className="main-logo">₹</div>
+          {/*<div className="main-logo">R</div>*/}
           <h1 className="main-title">Financial Education Center</h1>
           <p className="main-subtitle">
             Master your finances with practical South African examples, from safe savings to bold investments. 
