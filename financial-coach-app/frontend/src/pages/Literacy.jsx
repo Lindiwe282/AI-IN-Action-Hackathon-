@@ -15,7 +15,7 @@ const Literacy = () => {
       return: "R50 - R250 per R5,000 yearly",
       desc: "Your money is 100% safe with banks. These are low-risk options, ideal for short-term goals or emergency funds. They earn interest steadily, but returns are usually lower than other investments.",
       example: "Put R10,000 in a savings account at 5% = R500 interest per year",
-      gradient: "green",
+      gradient: "sage-light",
     },
     {
       title: "Government Bonds (RSA Retail Bonds)",
@@ -23,7 +23,7 @@ const Literacy = () => {
       return: "R100 - R300 per R5,000 yearly",
       desc: "Government bonds are loans you give to the South African government. They are very secure and pay periodic interest, but inflation can slightly reduce real returns. Suitable for conservative investors.",
       example: "R5,000 government bond at 6% = R300 yearly",
-      gradient: "blue",
+      gradient: "sage-medium",
     },
     {
       title: "Corporate Bonds & Unit Trusts",
@@ -31,7 +31,7 @@ const Literacy = () => {
       return: "R150 - R400 per R5,000 yearly",
       desc: "Corporate bonds and unit trusts invest in companies. Returns are higher than government bonds but carry some company risk. They are generally stable, with moderate growth potential.",
       example: "Allan Gray unit trust: R5,000 could grow by R350+ annually",
-      gradient: "amber",
+      gradient: "sage-dark",
     },
     {
       title: "JSE Index Funds (Top 40)",
@@ -39,7 +39,7 @@ const Literacy = () => {
       return: "R300 - R500 per R5,000 yearly",
       desc: "Index funds let you own pieces of South Africa's top 40 companies. They are diversified and reduce single-stock risk, providing solid historical growth over time.",
       example: "Satrix Top 40 ETF: R10,000 historically grows R800-1,200 per year",
-      gradient: "purple",
+      gradient: "sage-forest",
     },
     {
       title: "Individual JSE Stocks",
@@ -47,7 +47,7 @@ const Literacy = () => {
       return: "R0 - R2,500+ per R5,000 yearly",
       desc: "Buying individual stocks is high-risk, high-reward. Prices fluctuate based on market trends and company performance. Can lead to large gains or losses.",
       example: "Naspers stock: R5,000 could become R0 or R15,000+ in a year",
-      gradient: "orange",
+      gradient: "sage-warning",
     },
     {
       title: "Crypto (Bitcoin, Ethereum)",
@@ -55,7 +55,7 @@ const Literacy = () => {
       return: "R0 - R25,000+ per R5,000 yearly",
       desc: "Cryptocurrencies are highly volatile digital assets. Prices can soar or crash quickly. Only invest money you can afford to lose, as potential gains and losses are extreme.",
       example: "R1,000 in Bitcoin could become R100 or R10,000 within months",
-      gradient: "red",
+      gradient: "sage-alert",
     },
   ];
 
@@ -64,7 +64,7 @@ const Literacy = () => {
       title: "What is Interest?",
       desc: "Interest is the cost of borrowing money or the reward for saving it. It is expressed as a percentage rate.",
       examples: [],
-      gradient: "blue",
+      gradient: "sage-light",
     },
     {
       title: "Simple Interest",
@@ -73,7 +73,7 @@ const Literacy = () => {
         "Loan Example: Borrow R10,000 at 10% per year for 3 years → Interest = R3,000",
         "Investment Example: Deposit R5,000 at 6% for 2 years → Interest = R600"
       ],
-      gradient: "green"
+      gradient: "sage-medium"
     },
     {
       title: "Compound Interest",
@@ -82,7 +82,7 @@ const Literacy = () => {
         "Investment: R5,000 at 6% annually, compounded quarterly for 2 years → ≈ R636 interest",
         "Loan: R10,000 at 10% annually, compounded monthly for 3 years → ≈ R3,347 interest"
       ],
-      gradient: "purple"
+      gradient: "sage-dark"
     },
     {
       title: "Compounding Periods",
@@ -91,11 +91,10 @@ const Literacy = () => {
         "Monthly vs annually: R5,000 at 6% compounded monthly earns more than annually",
         "Short-term loan compounded daily accumulates more interest than monthly"
       ],
-      gradient: "amber"
+      gradient: "sage-forest"
     }
   ];
 
-  //quiz questions covering Investments and Interest
   const quizQuestions = [
     {
       question: "Which investment is considered ultra-safe?",
@@ -170,22 +169,60 @@ const Literacy = () => {
   };
 
   const renderMenu = () => (
-    <div className="menu-buttons" style={{ display: "flex", flexDirection: "column", gap: "2rem", alignItems: "center", marginTop: "4rem" }}>
-      <h2 style={{ textAlign: "center" }}>Select a Financial Knowledge Section</h2>
-      <button className="menu-btn" onClick={() => setSection("investments")}>Investments</button>
-      <button className="menu-btn" onClick={() => setSection("interest")}>Interest</button>
-      <button className="menu-btn" onClick={() => setSection("quiz")}>Test Your Knowledge</button>
+    <div className="menu-section">
+      <div className="menu-content">
+        <h2 className="menu-title">Select a Financial Knowledge Section</h2>
+        <div className="menu-buttons">
+          <button className="menu-btn" onClick={() => setSection("investments")}>
+            <div className="menu-btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
+              </svg>
+            </div>
+            <div className="menu-btn-content">
+              <div className="menu-btn-title">Investments</div>
+              <div className="menu-btn-desc">Learn about different investment options</div>
+            </div>
+          </button>
+          <button className="menu-btn" onClick={() => setSection("interest")}>
+            <div className="menu-btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+            </div>
+            <div className="menu-btn-content">
+              <div className="menu-btn-title">Interest</div>
+              <div className="menu-btn-desc">Understand simple & compound interest</div>
+            </div>
+          </button>
+          <button className="menu-btn" onClick={() => setSection("quiz")}>
+            <div className="menu-btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="9,9h6v6h-6z"></path>
+                <path d="M16.24 7.76l-2.12 2.12"></path>
+              </svg>
+            </div>
+            <div className="menu-btn-content">
+              <div className="menu-btn-title">Test Your Knowledge</div>
+              <div className="menu-btn-desc">Quiz yourself on financial concepts</div>
+            </div>
+          </button>
+        </div>
+      </div>
     </div>
   );
 
   const renderCards = (items, showReturn = false) => (
-    <div className="grid-container">
+    <div className="cards-grid">
       {items.map((item, idx) => (
-        <div key={idx} className={`card gradient-${item.gradient}`}>
+        <div key={idx} className={`concept-card gradient-${item.gradient}`}>
           {item.level && <div className="card-level">{item.level}</div>}
           <h4 className="card-title">{item.title}</h4>
           <p className="card-desc">{item.desc}</p>
-          {showReturn && <p className="card-return"> Typical return: {item.return}</p>}
+          {showReturn && <div className="card-return">Typical return: {item.return}</div>}
+          {item.example && <div className="card-example">{item.example}</div>}
           {item.examples && item.examples.map((ex, i) => (
             <div key={i} className="card-example">{ex}</div>
           ))}
@@ -195,103 +232,126 @@ const Literacy = () => {
   );
 
   const renderQuiz = () => {
-  const q = quizQuestions[currentQuestion];
+    const q = quizQuestions[currentQuestion];
 
-  return (
-    <div>
-      {renderBackButton()}
-      <h2 className="section-title">Financial Literacy Quiz</h2>
+    return (
+      <div>
+        {renderBackButton()}
+        <div className="quiz-section">
+          <h2 className="section-title">Financial Literacy Quiz</h2>
+          <p className="section-desc">Test your understanding of financial concepts</p>
 
-      {quizSubmitted ? (
-        <div>
-          {quizQuestions.map((question, idx) => (
-            <div key={idx} className="quiz-card">
-              <p className="quiz-question">{idx + 1}. {question.question}</p>
-              {question.options.map((opt, i) => {
-                const isUserAnswer = quizAnswers[idx] === opt;
-                const isCorrect = question.answer === opt;
-                return (
-                  <div
-                    key={i}
-                    className={`quiz-option-review ${isCorrect ? "correct" : ""} ${isUserAnswer && !isCorrect ? "wrong" : ""}`}
-                  >
-                    {opt} {isCorrect && "✔"} {isUserAnswer && !isCorrect && "✖"}
+          {quizSubmitted ? (
+            <div className="quiz-results">
+              <div className="results-summary">
+                <div className="score-display">
+                  <div className="score-number">{quizScore}%</div>
+                  <div className="score-label">Your Score</div>
+                </div>
+                <div className="xp-display">
+                  <div className="xp-number">{xpEarned} XP</div>
+                  <div className="xp-label">Experience Points</div>
+                </div>
+              </div>
+
+              <div className="questions-review">
+                {quizQuestions.map((question, idx) => (
+                  <div key={idx} className="review-card">
+                    <p className="review-question">{idx + 1}. {question.question}</p>
+                    <div className="review-options">
+                      {question.options.map((opt, i) => {
+                        const isUserAnswer = quizAnswers[idx] === opt;
+                        const isCorrect = question.answer === opt;
+                        return (
+                          <div
+                            key={i}
+                            className={`review-option ${
+                              isCorrect ? "correct" : ""
+                            } ${isUserAnswer && !isCorrect ? "wrong" : ""}`}
+                          >
+                            <span>{opt}</span>
+                            {isCorrect && <span className="check-mark">✓</span>}
+                            {isUserAnswer && !isCorrect && <span className="x-mark">✗</span>}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          ))}
-          <p className="quiz-score">You scored: {quizScore}%</p>
-          <p className="quiz-score">XP Earned: {xpEarned}</p>
-        </div>
-      ) : (
-        <div className="quiz-card">
-          <p className="quiz-question">{currentQuestion + 1}. {q.question}</p>
-          {q.options.map((opt, i) => (
-            <label key={i} className={`quiz-option ${quizAnswers[currentQuestion] === opt ? "selected" : ""}`}>
-              <input
-                type="radio"
-                name={`q${currentQuestion}`}
-                value={opt}
-                checked={quizAnswers[currentQuestion] === opt}
-                onChange={() => handleAnswerChange(opt)}
-              />
-              {opt}
-            </label>
-          ))}
+          ) : (
+            <div className="quiz-card">
+              <div className="quiz-progress">
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill" 
+                    style={{ width: `${((currentQuestion + 1) / quizQuestions.length) * 100}%` }}
+                  ></div>
+                </div>
+                <span className="progress-text">
+                  Question {currentQuestion + 1} of {quizQuestions.length}
+                </span>
+              </div>
 
-          <div className="quiz-nav">
-            <button
-              type="button"
-              disabled={currentQuestion === 0}
-              onClick={() => setCurrentQuestion(prev => prev - 1)}
-              className="nav-btn"
-            >
-              Previous
-            </button>
-            {currentQuestion < quizQuestions.length - 1 ? (
-              <button
-                type="button"
-                onClick={() => setCurrentQuestion(prev => prev + 1)}
-                className="nav-btn"
-              >
-                Next
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSubmitQuiz}
-                className="nav-btn submit"
-              >
-                Submit Quiz
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+              <div className="question-content">
+                <h3 className="quiz-question">{q.question}</h3>
+                <div className="quiz-options">
+                  {q.options.map((opt, i) => (
+                    <label key={i} className={`quiz-option ${quizAnswers[currentQuestion] === opt ? "selected" : ""}`}>
+                      <input
+                        type="radio"
+                        name={`q${currentQuestion}`}
+                        value={opt}
+                        checked={quizAnswers[currentQuestion] === opt}
+                        onChange={() => handleAnswerChange(opt)}
+                      />
+                      <span className="option-text">{opt}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
 
+              <div className="quiz-navigation">
+                <button
+                  type="button"
+                  disabled={currentQuestion === 0}
+                  onClick={() => setCurrentQuestion(prev => prev - 1)}
+                  className="nav-btn nav-btn-secondary"
+                >
+                  Previous
+                </button>
+                {currentQuestion < quizQuestions.length - 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentQuestion(prev => prev + 1)}
+                    className="nav-btn nav-btn-primary"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSubmitQuiz}
+                    className="nav-btn nav-btn-submit"
+                  >
+                    Submit Quiz
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const renderBackButton = () => (
     <button 
       onClick={() => setSection("menu")} 
-      style={{ 
-        marginBottom: "1rem", 
-        padding: "0.5rem 1rem", 
-        borderRadius: "8px", 
-        border: "none", 
-        background: "#1976d2", 
-        color: "white", 
-        fontWeight: "bold",
-        cursor: "pointer",
-        transition: "background 0.3s, transform 0.2s"
-      }}
-      onMouseEnter={e => e.currentTarget.style.background = "#115293"}
-      onMouseLeave={e => e.currentTarget.style.background = "#1976d2"}
+      className="back-button"
     >
-      ⬅ Back
+      ← Back to Menu
     </button>
   );
 
@@ -301,18 +361,22 @@ const Literacy = () => {
         return (
           <section>
             {renderBackButton()}
-            <h2 className="section-title">Investments</h2>
-            <p className="section-desc">Learn about different types of investments from safe to risky.</p>
-            {renderCards(investments, true)}
+            <div className="content-section">
+              <h2 className="section-title">Investment Types</h2>
+              <p className="section-desc">Learn about different types of investments from safe to risky, with South African examples.</p>
+              {renderCards(investments, true)}
+            </div>
           </section>
         );
       case "interest":
         return (
           <section>
             {renderBackButton()}
-            <h2 className="section-title">Interest Rates</h2>
-            <p className="section-desc">Understand interest, simple interest, compound interest, and compounding periods.</p>
-            {renderCards(interestConcepts)}
+            <div className="content-section">
+              <h2 className="section-title">Interest Concepts</h2>
+              <p className="section-desc">Understand interest, simple interest, compound interest, and compounding periods.</p>
+              {renderCards(interestConcepts)}
+            </div>
           </section>
         );
       case "quiz":
@@ -325,50 +389,641 @@ const Literacy = () => {
   return (
     <div className="literacy-container">
       <style>{`
-        .literacy-container { max-width: 900px; margin: 0 auto; padding: 2rem; font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; }
-        .menu-btn { font-size: 1.25rem; padding: 1rem 2rem; border-radius: 12px; border: none; cursor: pointer; background: #1976d2; color: white; transition: background 0.3s; }
-        .menu-btn:hover { background: #115293; }
-        .grid-container { display: flex; flex-direction: column; gap: 2rem; }
-        .card { padding: 1.5rem; border-radius: 16px; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; width: 100%; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(0,0,0,0.12); }
-        .card-level { background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 12px; font-weight: bold; font-size: 0.8rem; display: inline-block; margin-bottom: 0.5rem; }
-        .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: black; }
-        .card-desc { font-size: 0.9rem; margin-bottom: 0.5rem; color: black; }
-        .card-return { font-size: 0.9rem; margin-bottom: 0.5rem; color: black; }
-        .card-example { background: rgba(255,255,255,0.15); padding: 0.5rem; border-radius: 12px; font-size: 0.8rem; color: black; margin-bottom: 0.25rem; }
-        .gradient-green { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .gradient-blue { background: linear-gradient(135deg, #3a7bd5, #00d2ff); }
-        .gradient-amber { background: linear-gradient(135deg, #f7971e, #ffd200); }
-        .gradient-purple { background: linear-gradient(135deg, #7b2ff7, #f107a3); }
-        .gradient-orange { background: linear-gradient(135deg, #f953c6, #b91d73); }
-        .gradient-red { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
-        .quiz-card {background: linear-gradient(135deg, #4facfe, #00f2fe); padding: 1.5rem; border-radius: 16px; color: white; margin-bottom: 2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: transform 0.3s; }
-        .quiz-card:hover {transform: translateY(-5px); }
-        .quiz-question {font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; }
-        .quiz-option {display: block; margin-bottom: 0.5rem; padding: 0.5rem 1rem; border-radius: 12px; background: rgba(255,255,255,0.15); cursor: pointer; transition: background 0.3s; }
-        .quiz-option.selected {background: rgba(255,255,255,0.3); }
-        .quiz-option input {margin-right: 0.5rem; }
-        .quiz-nav {margin-top: 1rem; display: flex; gap: 1rem; }
-        .nav-btn {padding: 0.5rem 1.5rem; border-radius: 8px; border: none; background: #1976d2; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s; }
-        .nav-btn:hover:not(:disabled) {background: #115293; }
-        .nav-btn:disabled {opacity: 0.5; cursor: not-allowed; }
-        .nav-btn.submit {background: #4caf50; }
-        .nav-btn.submit:hover {background: #388e3c; }
-        .quiz-option-review {padding: 0.5rem 1rem; border-radius: 12px; margin-bottom: 0.25rem; }
-        .quiz-option-review.correct {background: #4caf50; color: white; }
-        .quiz-option-review.wrong {background: #f44336; color: white; }
-        .quiz-score {font-size: 1.2rem; font-weight: bold; margin-top: 1rem; }
+        .literacy-container {
+          min-height: 100vh;
+          background: linear-gradient(135deg, 
+            rgba(248, 250, 248, 1) 0%, 
+            rgba(242, 247, 242, 1) 25%,
+            rgba(235, 243, 235, 1) 50%,
+            rgba(242, 247, 242, 1) 75%,
+            rgba(248, 250, 248, 1) 100%
+          );
+          padding: 6rem 2rem 2rem;
+          font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+          color: #1e293b;
+        }
+        
+        .content-wrapper {
+          max-width: 1000px;
+          margin: 0 auto;
+        }
+        
+        .header-section {
+          text-align: center;
+          margin-bottom: 4rem;
+          position: relative;
+        }
+        
+        .header-decoration {
+          position: absolute;
+          top: -20px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 120px;
+          height: 4px;
+          background: linear-gradient(90deg, #8fae6d, #7a9b5b);
+          border-radius: 2px;
+        }
+        
+        .main-logo {
+          display: inline-block;
+          width: 80px;
+          height: 80px;
+          background: linear-gradient(135deg, #8fae6d, #7a9b5b);
+          border-radius: 20px;
+          color: white;
+          font-weight: 800;
+          font-size: 2.5rem;
+          line-height: 80px;
+          margin-bottom: 1.5rem;
+          box-shadow: 0 8px 24px rgba(143, 174, 109, 0.3);
+        }
+        
+        .main-title {
+          font-size: 3.5rem;
+          font-weight: 800;
+          margin-bottom: 1rem;
+          background: linear-gradient(135deg, #1e293b 0%, #475569 50%, #7a9b5b 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          line-height: 1.1;
+        }
+        
+        .main-subtitle {
+          font-size: 1.25rem;
+          color: #64748b;
+          font-weight: 400;
+          max-width: 700px;
+          margin: 0 auto;
+          line-height: 1.6;
+        }
+        
+        .menu-section {
+          display: flex;
+          justify-content: center;
+          padding: 2rem 0;
+        }
+        
+        .menu-content {
+          width: 100%;
+          max-width: 800px;
+        }
+        
+        .menu-title {
+          text-align: center;
+          font-size: 2rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 3rem;
+        }
+        
+        .menu-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        
+        .menu-btn {
+          display: flex;
+          align-items: center;
+          gap: 1.5rem;
+          padding: 2rem;
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(248, 250, 248, 0.9) 100%
+          );
+          border: 2px solid rgba(143, 174, 109, 0.2);
+          border-radius: 20px;
+          cursor: pointer;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(20px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+        
+        .menu-btn:hover {
+          transform: translateY(-4px);
+          border-color: #8fae6d;
+          box-shadow: 0 16px 32px rgba(143, 174, 109, 0.15);
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 1) 0%, 
+            rgba(248, 250, 248, 1) 100%
+          );
+        }
+        
+        .menu-btn-icon {
+          width: 80px;
+          height: 80px;
+          background: linear-gradient(135deg, #8fae6d, #7a9b5b);
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          color: white;
+        }
+        
+        .menu-btn-icon svg {
+          width: 40px;
+          height: 40px;
+          stroke-width: 2.5;
+        }
+        
+        .menu-btn-content {
+          flex: 1;
+          text-align: left;
+        }
+        
+        .menu-btn-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 0.5rem;
+        }
+        
+        .menu-btn-desc {
+          color: #64748b;
+          font-size: 1rem;
+          line-height: 1.4;
+        }
+        
+        .back-button {
+          padding: 0.75rem 1.5rem;
+          border-radius: 12px;
+          border: 2px solid rgba(143, 174, 109, 0.3);
+          background: rgba(248, 250, 248, 0.9);
+          color: #7a9b5b;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-bottom: 2rem;
+          backdrop-filter: blur(10px);
+        }
+        
+        .back-button:hover {
+          background: rgba(143, 174, 109, 0.1);
+          border-color: #8fae6d;
+          transform: translateY(-2px);
+        }
+        
+        .content-section {
+          margin-top: 2rem;
+        }
+        
+        .section-title {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 1rem;
+          text-align: center;
+        }
+        
+        .section-desc {
+          font-size: 1.1rem;
+          color: #64748b;
+          text-align: center;
+          max-width: 600px;
+          margin: 0 auto 3rem;
+          line-height: 1.6;
+        }
+        
+        .cards-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+          gap: 2rem;
+          margin-top: 2rem;
+        }
+        
+        .concept-card {
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(248, 250, 248, 0.9) 100%
+          );
+          border: 2px solid rgba(143, 174, 109, 0.15);
+          border-radius: 20px;
+          padding: 2rem;
+          backdrop-filter: blur(15px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .concept-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: var(--card-gradient);
+          border-radius: 20px 20px 0 0;
+        }
+        
+        .concept-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+          border-color: rgba(143, 174, 109, 0.3);
+        }
+        
+        .gradient-sage-light {
+          --card-gradient: linear-gradient(135deg, #a7c085, #8fae6d);
+        }
+        
+        .gradient-sage-medium {
+          --card-gradient: linear-gradient(135deg, #8fae6d, #7a9b5b);
+        }
+        
+        .gradient-sage-dark {
+          --card-gradient: linear-gradient(135deg, #7a9b5b, #658749);
+        }
+        
+        .gradient-sage-forest {
+          --card-gradient: linear-gradient(135deg, #658749, #507338);
+        }
+        
+        .gradient-sage-warning {
+          --card-gradient: linear-gradient(135deg, #d97706, #b45309);
+        }
+        
+        .gradient-sage-alert {
+          --card-gradient: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+        
+        .card-level {
+          display: inline-block;
+          background: rgba(143, 174, 109, 0.15);
+          color: #7a9b5b;
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          font-weight: 600;
+          font-size: 0.85rem;
+          margin-bottom: 1rem;
+          border: 1px solid rgba(143, 174, 109, 0.3);
+        }
+        
+        .card-title {
+          font-size: 1.4rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 1rem;
+          line-height: 1.3;
+        }
+        
+        .card-desc {
+          color: #475569;
+          line-height: 1.6;
+          margin-bottom: 1rem;
+          font-size: 1rem;
+        }
+        
+        .card-return {
+          background: rgba(143, 174, 109, 0.1);
+          color: #7a9b5b;
+          padding: 0.75rem 1rem;
+          border-radius: 12px;
+          font-weight: 600;
+          margin-bottom: 1rem;
+          border: 1px solid rgba(143, 174, 109, 0.2);
+        }
+        
+        .card-example {
+          background: rgba(248, 250, 248, 0.8);
+          border: 1px solid rgba(143, 174, 109, 0.2);
+          padding: 1rem;
+          border-radius: 12px;
+          color: #475569;
+          font-size: 0.95rem;
+          line-height: 1.5;
+          margin-bottom: 0.75rem;
+        }
+        
+        .card-example:last-child {
+          margin-bottom: 0;
+        }
+        
+        .quiz-section {
+          max-width: 800px;
+          margin: 0 auto;
+        }
+        
+        .quiz-card {
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(248, 250, 248, 0.9) 100%
+          );
+          border: 2px solid rgba(143, 174, 109, 0.2);
+          border-radius: 20px;
+          padding: 2.5rem;
+          backdrop-filter: blur(20px);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+          margin-bottom: 2rem;
+        }
+        
+        .quiz-progress {
+          margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+          width: 100%;
+          height: 8px;
+          background: rgba(143, 174, 109, 0.2);
+          border-radius: 4px;
+          overflow: hidden;
+          margin-bottom: 0.5rem;
+        }
+        
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #8fae6d, #7a9b5b);
+          border-radius: 4px;
+          transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+          color: #64748b;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+        
+        .quiz-question {
+          font-size: 1.3rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 2rem;
+          line-height: 1.4;
+        }
+        
+        .quiz-options {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          margin-bottom: 2rem;
+        }
+        
+        .quiz-option {
+          display: flex;
+          align-items: center;
+          padding: 1rem 1.25rem;
+          border: 2px solid rgba(143, 174, 109, 0.2);
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          background: rgba(248, 250, 248, 0.5);
+        }
+        
+        .quiz-option:hover {
+          border-color: #8fae6d;
+          background: rgba(143, 174, 109, 0.05);
+          transform: translateY(-1px);
+        }
+        
+        .quiz-option.selected {
+          border-color: #7a9b5b;
+          background: rgba(143, 174, 109, 0.15);
+        }
+        
+        .quiz-option input {
+          margin-right: 1rem;
+          width: 18px;
+          height: 18px;
+          accent-color: #7a9b5b;
+        }
+        
+        .option-text {
+          flex: 1;
+          font-weight: 500;
+          color: #1e293b;
+        }
+        
+        .quiz-navigation {
+          display: flex;
+          gap: 1rem;
+          justify-content: space-between;
+        }
+        
+        .nav-btn {
+          padding: 0.75rem 2rem;
+          border-radius: 12px;
+          border: none;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 1rem;
+        }
+        
+        .nav-btn-primary {
+          background: linear-gradient(135deg, #8fae6d, #7a9b5b);
+          color: white;
+          box-shadow: 0 4px 12px rgba(143, 174, 109, 0.3);
+        }
+        
+        .nav-btn-primary:hover {
+          background: linear-gradient(135deg, #7a9b5b, #658749);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(143, 174, 109, 0.4);
+        }
+        
+        .nav-btn-secondary {
+          background: rgba(248, 250, 248, 0.8);
+          color: #7a9b5b;
+          border: 2px solid rgba(143, 174, 109, 0.3);
+        }
+        
+        .nav-btn-secondary:hover {
+          background: rgba(143, 174, 109, 0.1);
+          border-color: #8fae6d;
+        }
+        
+        .nav-btn-submit {
+          background: linear-gradient(135deg, #7a9b5b, #658749);
+          color: white;
+          box-shadow: 0 4px 12px rgba(122, 155, 91, 0.4);
+        }
+        
+        .nav-btn-submit:hover {
+          background: linear-gradient(135deg, #658749, #507338);
+          transform: translateY(-2px);
+        }
+        
+        .nav-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+        }
+        
+        .quiz-results {
+          margin-top: 2rem;
+        }
+        
+        .results-summary {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 2rem;
+          margin-bottom: 3rem;
+        }
+        
+        .score-display, .xp-display {
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.9) 0%, 
+            rgba(248, 250, 248, 0.8) 100%
+          );
+          border: 2px solid rgba(143, 174, 109, 0.2);
+          border-radius: 16px;
+          padding: 2rem;
+          text-align: center;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+        }
+        
+        .score-number, .xp-number {
+          font-size: 3rem;
+          font-weight: 800;
+          background: linear-gradient(135deg, #7a9b5b, #658749);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 0.5rem;
+        }
+        
+        .score-label, .xp-label {
+          color: #64748b;
+          font-weight: 600;
+          font-size: 1.1rem;
+        }
+        
+        .questions-review {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        
+        .review-card {
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(248, 250, 248, 0.9) 100%
+          );
+          border: 2px solid rgba(143, 174, 109, 0.15);
+          border-radius: 16px;
+          padding: 2rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .review-question {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #1e293b;
+          margin-bottom: 1rem;
+          line-height: 1.4;
+        }
+        
+        .review-options {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .review-option {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.75rem 1rem;
+          border-radius: 8px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        }
+        
+        .review-option.correct {
+          background: rgba(34, 197, 94, 0.15);
+          color: #15803d;
+          border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .review-option.wrong {
+          background: rgba(239, 68, 68, 0.15);
+          color: #dc2626;
+          border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .check-mark {
+          color: #15803d;
+          font-weight: 700;
+          font-size: 1.2rem;
+        }
+        
+        .x-mark {
+          color: #dc2626;
+          font-weight: 700;
+          font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+          .literacy-container {
+            padding: 4rem 1rem 1rem;
+          }
+          
+          .main-title {
+            font-size: 2.5rem;
+          }
+          
+          .main-subtitle {
+            font-size: 1.1rem;
+          }
+          
+          .menu-btn {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+            padding: 1.5rem;
+          }
+          
+          .menu-btn-content {
+            text-align: center;
+          }
+          
+          .cards-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          
+          .concept-card {
+            padding: 1.5rem;
+          }
+          
+          .quiz-card {
+            padding: 1.5rem;
+          }
+          
+          .quiz-navigation {
+            flex-direction: column;
+            gap: 1rem;
+          }
+          
+          .nav-btn {
+            width: 100%;
+          }
+          
+          .results-summary {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+        }
       `}</style>
 
-      <header className="header" style={{ textAlign: "center", marginBottom: "4rem" }}>
-        <div className="logo" style={{ display: "inline-block", width: "60px", height: "60px", background: "linear-gradient(135deg, #4facfe, #00f2fe)", borderRadius: "16px", color: "white", fontWeight: "bold", fontSize: "2rem", lineHeight: "60px", marginBottom: "1rem" }}>R</div>
-        <h1 className="title" style={{ fontSize: "3rem", fontWeight: 900 }}>Financial Education Center</h1>
-        <p className="subtitle" style={{ fontSize: "1.2rem", color: "#555", maxWidth: "800px", margin: "0 auto" }}>
-          Master your finances with practical South African examples, from safe savings to bold investments.
-        </p>
-      </header>
+      <div className="content-wrapper">
+        <header className="header-section">
+          <div className="header-decoration"></div>
+          <div className="main-logo">₹</div>
+          <h1 className="main-title">Financial Education Center</h1>
+          <p className="main-subtitle">
+            Master your finances with practical South African examples, from safe savings to bold investments. 
+            Build your financial knowledge with interactive lessons and quizzes.
+          </p>
+        </header>
 
-      {renderSection()}
+        {renderSection()}
+      </div>
     </div>
   );
 };
