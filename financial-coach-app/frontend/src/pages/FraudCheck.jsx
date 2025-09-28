@@ -18,17 +18,20 @@ import {
 import axios from 'axios';
 
 const FraudCheck = () => {
+  const [activeTab, setActiveTab] = useState('investment');
+  
+  // Investment Analysis State
   const [pdfFile, setPdfFile] = useState(null);
   const [amount, setAmount] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [promisedReturn, setPromisedReturn] = useState("");
   const [fraudResult, setFraudResult] = useState(null);
+  const [loadingFraud, setLoadingFraud] = useState(false);
 
+  // Phishing Detection State
   const [phishingInput, setPhishingInput] = useState("");
   const [phishingUrl, setPhishingUrl] = useState("");
   const [phishingResult, setPhishingResult] = useState(null);
-
-  const [loadingFraud, setLoadingFraud] = useState(false);
   const [loadingPhish, setLoadingPhish] = useState(false);
 
   // --- Handlers ---
@@ -103,12 +106,15 @@ const FraudCheck = () => {
     setLoadingPhish(false);
   };
 
-  const resetForm = () => {
+  const resetInvestmentForm = () => {
     setPdfFile(null);
     setAmount("");
     setInterestRate("");
     setPromisedReturn("");
     setFraudResult(null);
+  };
+
+  const resetPhishingForm = () => {
     setPhishingInput("");
     setPhishingUrl("");
     setPhishingResult(null);
@@ -173,7 +179,7 @@ const FraudCheck = () => {
             line-height: 1.5;
           }
 
-          .card { 
+          .tabs-container {
             background: linear-gradient(135deg, 
               rgba(255, 255, 255, 0.95) 0%, 
               rgba(248, 250, 252, 0.9) 100%
@@ -181,16 +187,14 @@ const FraudCheck = () => {
             backdrop-filter: blur(20px);
             border: 1px solid rgba(135, 169, 107, 0.2);
             border-radius: 24px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
             box-shadow: 
               0 20px 40px rgba(0, 0, 0, 0.08),
               0 0 0 1px rgba(135, 169, 107, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
             position: relative;
           }
 
-          .card::before {
+          .tabs-container::before {
             content: '';
             position: absolute;
             top: -20px;
@@ -202,11 +206,68 @@ const FraudCheck = () => {
             border-radius: 2px;
           }
 
-          .card:hover { 
-            transform: translateY(-4px);
+          .tabs-header {
+            display: flex;
+            background: linear-gradient(135deg, rgba(135, 169, 107, 0.08) 0%, rgba(248, 250, 252, 0.8) 100%);
+            border-bottom: 1px solid rgba(135, 169, 107, 0.2);
+          }
+
+          .tab-button {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            background: none;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #64748b;
+            position: relative;
+          }
+
+          .tab-button.active {
+            color: #1e293b;
+            background: linear-gradient(135deg, rgba(135, 169, 107, 0.15) 0%, rgba(255, 255, 255, 0.8) 100%);
+          }
+
+          .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #87a96b, #6b8e47);
+            border-radius: 2px 2px 0 0;
+          }
+
+          .tab-button:hover:not(.active) {
+            background: rgba(135, 169, 107, 0.05);
+            color: #1e293b;
+          }
+
+          .tab-content {
+            padding: 2.5rem;
+          }
+
+          .card {
+            background: linear-gradient(135deg, 
+              rgba(255, 255, 255, 0.95) 0%, 
+              rgba(248, 250, 252, 0.9) 100%
+            );
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 169, 107, 0.2);
+            border-radius: 24px;
             box-shadow: 
-              0 32px 64px rgba(0, 0, 0, 0.12),
-              0 0 0 1px rgba(135, 169, 107, 0.2);
+              0 20px 40px rgba(0, 0, 0, 0.08),
+              0 0 0 1px rgba(135, 169, 107, 0.1);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
           }
 
           .card-title { 
@@ -445,6 +506,13 @@ const FraudCheck = () => {
             font-weight: 500;
           }
 
+          .reset-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(135, 169, 107, 0.2);
+            text-align: center;
+          }
+
           @media (max-width: 768px) {
             .fraud-container {
               padding: 5rem 1rem 1rem;
@@ -454,8 +522,13 @@ const FraudCheck = () => {
               font-size: 2.5rem;
             }
             
-            .card {
+            .tab-content {
               padding: 1.5rem;
+            }
+            
+            .tab-button {
+              padding: 1rem;
+              font-size: 1rem;
             }
             
             .stats-grid {
@@ -717,13 +790,13 @@ const FraudCheck = () => {
               </div>
             </div>
           )}
-        </div>
 
-        <div style={{ textAlign: "center", marginTop: "3rem" }}>
-          <button className="btn btn-secondary" onClick={resetForm}>
-            <RefreshCw size={20} />
-            Reset All Forms
-          </button>
+          <div className="reset-section">
+            <button className="btn btn-secondary" onClick={resetPhishingForm}>
+              <RefreshCw size={20} />
+              Reset Phishing Form
+            </button>
+          </div>
         </div>
       </div>
     </div>
