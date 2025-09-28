@@ -139,7 +139,7 @@ const FINANCIAL_FACTS = [
     fact: 'Government Bonds: Loans to the government with fixed interest, very safe for conservative investors.',
     category: 'Investing',
     difficulty: 'Intermediate',
-    icon: '🛡️'
+    icon: '🛡'
   },
   {
     fact: 'The Rule of 72: Divide 72 by your interest rate to estimate how long it takes your money to double.',
@@ -167,36 +167,6 @@ const FINANCIAL_FACTS = [
   }
 ];
 
-const TESTIMONIALS = [
-  { 
-    name: 'Sarah Mitchell', 
-    role: 'Marketing Manager', 
-    rating: 5, 
-    text: 'The AI-powered insights helped me optimize my investments and achieve 22% better returns while learning along the way!',
-    avatar: 'SM',
-    achievement: 'Saved $15K in first year',
-    timeframe: '8 months ago'
-  },
-  { 
-    name: 'David Chen', 
-    role: 'Software Engineer', 
-    rating: 5, 
-    text: 'Security features gave me confidence to invest more. The fraud detection caught two suspicious transactions!',
-    avatar: 'DC',
-    achievement: 'Portfolio grew 35%',
-    timeframe: '6 months ago'
-  },
-  { 
-    name: 'Lisa Rodriguez', 
-    role: 'Teacher', 
-    rating: 5, 
-    text: 'Gamified learning made complex topics simple. My whole family now uses the platform for financial planning!',
-    avatar: 'LR',
-    achievement: 'Paid off student loans',
-    timeframe: '4 months ago'
-  }
-];
-
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [healthStatus, setHealthStatus] = useState(null);
@@ -212,7 +182,7 @@ const Dashboard = () => {
   const backgroundStyles = useMemo(() => ({
     heroBackground: {
       background: `
-        linear-gradient(135deg, rgba(135, 169, 107, 0.15) 0%, rgba(107, 142, 71, 0.2) 100%),
+        linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(107, 142, 71, 0.7) 30%, rgba(135, 169, 107, 0.6) 70%, rgba(0, 0, 0, 0.5) 100%),
         url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80")
       `,
       backgroundSize: 'cover',
@@ -231,7 +201,7 @@ const Dashboard = () => {
         right: 0,
         width: '400px',
         height: '400px',
-        background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(135, 169, 107, 0.3) 0%, transparent 70%)',
         borderRadius: '50%',
         transform: 'translate(50%, -50%)',
         pointerEvents: 'none'
@@ -243,7 +213,7 @@ const Dashboard = () => {
         left: 0,
         width: '300px',
         height: '300px',
-        background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%)',
+        background: 'radial-gradient(circle, rgba(255,255,255, 0.1) 0%, transparent 60%)',
         borderRadius: '50%',
         transform: 'translate(-30%, 30%)',
         pointerEvents: 'none'
@@ -327,7 +297,7 @@ const Dashboard = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, rgba(135, 169, 107, 0.3) 0%, rgba(107, 142, 71, 0.4) 100%)',
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(107, 142, 71, 0.8) 100%)',
         color: 'white',
         position: 'relative',
         overflow: 'hidden'
@@ -447,7 +417,7 @@ const Dashboard = () => {
           left: 0,
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, rgba(135, 169, 107, 0.15) 0%, rgba(107, 142, 71, 0.2) 100%)',
+          background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(107, 142, 71, 0.75) 30%, rgba(135, 169, 107, 0.65) 70%, rgba(0, 0, 0, 0.55) 100%)',
           zIndex: -1
         }
       }}
@@ -495,7 +465,7 @@ const Dashboard = () => {
               </Typography>
 
               <Typography
-                variant={isMobile ? "h6" : "h5"}
+                variant={isSmallMobile ? "h6" : "h5"}
                 sx={{
                   maxWidth: '750px',
                   mx: 'auto',
@@ -503,170 +473,136 @@ const Dashboard = () => {
                   opacity: 0.95,
                   lineHeight: 1.6,
                   fontWeight: 400,
-                  textShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                  textShadow: '0 4px 16px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3)'
                 }}
               >
                 Transform your relationship with money through secure, AI-powered education. 
                 Build wealth confidently with personalized insights and enterprise-grade protection.
               </Typography>
 
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                gap: 3, 
-                flexWrap: 'wrap',
-                flexDirection: isSmallMobile ? 'column' : 'row',
-                mb: 8
-              }}>
-                <Button
-                  variant="contained"
-                  size="large"
-                  endIcon={<Timeline />}
-                  sx={{
-                    background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(22, 163, 74, 0.9) 100%)',
-                    color: 'white',
-                    px: 5,
-                    py: 2,
-                    fontWeight: 700,
-                    fontSize: '1.1rem',
-                    borderRadius: 3,
-                    boxShadow: '0 8px 32px rgba(34, 197, 94, 0.4)',
-                    textTransform: 'none',
-                    minHeight: 56,
-                    backdropFilter: 'blur(10px)',
-                    '&:hover': { 
-                      transform: 'translateY(-3px)', 
-                      boxShadow: '0 16px 48px rgba(34, 197, 94, 0.6)',
-                      background: 'linear-gradient(135deg, rgba(22, 163, 74, 0.9) 0%, rgba(21, 128, 61, 0.9) 100%)'
-                    },
-                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    minWidth: isSmallMobile ? '100%' : 'auto'
-                  }}
-                  href="/start-journey"
-                >
-                  Start Learning Journey
-                </Button>
-              </Box>
+              {/* Daily Financial Insight */}
+              {currentFact && showDailyInsight && (
+                <Container maxWidth="md" sx={{ mb: 6 }}>
+                  <Grow in timeout={1500}>
+                    <Paper
+                      elevation={12}
+                      sx={{
+                        background: 'rgba(0, 0, 0, 0.4)',
+                        backdropFilter: 'blur(20px)',
+                        borderRadius: 3,
+                        p: 3,
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.3), 0 8px 24px rgba(135, 169, 107, 0.15)',
+                        '&::before': {
+                          content: '""',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '4px',
+                          background: 'linear-gradient(90deg, #87a96b, #6b8e47, #87a96b)',
+                        }
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 3 }}>
+                        <Box sx={{ 
+                          background: 'rgba(135, 169, 107, 0.2)', 
+                          borderRadius: 3, 
+                          p: 2,
+                          minWidth: 60,
+                          height: 60,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: '1px solid rgba(135, 169, 107, 0.4)'
+                        }}>
+                          <Lightbulb sx={{ fontSize: 32, color: '#bbf7d0' }} />
+                        </Box>
+                        
+                        <Box sx={{ flex: 1 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5, flexWrap: 'wrap', gap: 2 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                              <Typography variant="h6" fontWeight="700" color="white">
+                                Daily Financial Insight
+                              </Typography>
+                              <Chip
+                                label={currentFact.category}
+                                size="small"
+                                sx={{ 
+                                  background: 'rgba(135, 169, 107, 0.3)', 
+                                  color: '#bbf7d0', 
+                                  fontWeight: 600,
+                                  border: '1px solid rgba(187, 247, 208, 0.4)'
+                                }}
+                              />
+                              <Chip
+                                label={currentFact.difficulty}
+                                size="small"
+                                sx={{ 
+                                  background: `${getDifficultyColor(currentFact.difficulty)}30`, 
+                                  color: getDifficultyColor(currentFact.difficulty),
+                                  fontWeight: 600,
+                                  border: `1px solid ${getDifficultyColor(currentFact.difficulty)}50`
+                                }}
+                              />
+                            </Box>
+                            <IconButton
+                              size="small"
+                              onClick={handleCloseDailyInsight}
+                              sx={{
+                                color: 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                  background: 'rgba(255,255,255,0.1)'
+                                }
+                              }}
+                            >
+                              <Close />
+                            </IconButton>
+                          </Box>
+                          
+                          <Typography variant="body1" sx={{ 
+                            lineHeight: 1.6, 
+                            color: 'rgba(255,255,255,0.95)',
+                            fontSize: '1.1rem',
+                            mb: 2,
+                            fontWeight: 500
+                          }}>
+                            {currentFact.fact}
+                          </Typography>
+                          
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={handleNextFact}
+                            startIcon={<AutoAwesome />}
+                            sx={{
+                              borderColor: 'rgba(187, 247, 208, 0.6)',
+                              color: '#bbf7d0',
+                              fontWeight: 600,
+                              borderRadius: 2,
+                              textTransform: 'none',
+                              '&:hover': {
+                                background: 'rgba(187, 247, 208, 0.1)',
+                                borderColor: '#bbf7d0'
+                              }
+                            }}
+                          >
+                            Next Insight
+                          </Button>
+                        </Box>
+                      </Box>
+                    </Paper>
+                  </Grow>
+                </Container>
+              )}
+
+              {/* Removed the Start Learning Journey button section */}
             </Box>
           </Fade>
         </Container>
       </Box>
-
-      {/* Daily Financial Insight Section - Integrated seamlessly */}
-      {currentFact && showDailyInsight && (
-        <Container maxWidth="lg" sx={{ py: 4, mt: -6, position: 'relative', zIndex: 2 }}>
-          <Grow in timeout={1500}>
-            <Paper
-              elevation={8}
-              sx={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%)',
-                backdropFilter: 'blur(20px)',
-                borderRadius: 4,
-                p: 3,
-                border: '1px solid rgba(135, 169, 107, 0.2)',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #87a96b, #6b8e47, #87a96b)',
-                }
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 3 }}>
-                <Box sx={{ 
-                  background: 'linear-gradient(135deg, #87a96b, #6b8e47)', 
-                  borderRadius: 3, 
-                  p: 2,
-                  minWidth: 60,
-                  height: 60,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(135, 169, 107, 0.3)'
-                }}>
-                  <Lightbulb sx={{ fontSize: 32, color: 'white' }} />
-                </Box>
-                
-                <Box sx={{ flex: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5, flexWrap: 'wrap', gap: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                      <Typography variant="h6" fontWeight="700" color="text.primary">
-                        Daily Financial Insight
-                      </Typography>
-                      <Chip
-                        label={currentFact.category}
-                        size="small"
-                        sx={{ 
-                          background: 'rgba(135, 169, 107, 0.1)', 
-                          color: '#87a96b', 
-                          fontWeight: 600,
-                          border: '1px solid rgba(135, 169, 107, 0.3)'
-                        }}
-                      />
-                      <Chip
-                        label={currentFact.difficulty}
-                        size="small"
-                        sx={{ 
-                          background: `${getDifficultyColor(currentFact.difficulty)}15`, 
-                          color: getDifficultyColor(currentFact.difficulty),
-                          fontWeight: 600,
-                          border: `1px solid ${getDifficultyColor(currentFact.difficulty)}30`
-                        }}
-                      />
-                    </Box>
-                    <IconButton
-                      size="small"
-                      onClick={handleCloseDailyInsight}
-                      sx={{
-                        color: '#6b7280',
-                        '&:hover': {
-                          background: 'rgba(107, 114, 128, 0.1)'
-                        }
-                      }}
-                    >
-                      <Close />
-                    </IconButton>
-                  </Box>
-                  
-                  <Typography variant="body1" sx={{ 
-                    lineHeight: 1.6, 
-                    color: 'text.secondary',
-                    fontSize: '1.1rem',
-                    mb: 2
-                  }}>
-                    {currentFact.fact}
-                  </Typography>
-                  
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={handleNextFact}
-                    startIcon={<AutoAwesome />}
-                    sx={{
-                      borderColor: '#87a96b',
-                      color: '#87a96b',
-                      fontWeight: 600,
-                      borderRadius: 2,
-                      textTransform: 'none',
-                      '&:hover': {
-                        background: 'rgba(135, 169, 107, 0.1)',
-                        borderColor: '#6b8e47'
-                      }
-                    }}
-                  >
-                    Next Insight
-                  </Button>
-                </Box>
-              </Box>
-            </Paper>
-          </Grow>
-        </Container>
-      )}
 
       {/* Enhanced Features Section */}
       <Container maxWidth="lg" sx={{ py: 10 }}>
@@ -674,13 +610,15 @@ const Dashboard = () => {
           <Chip
             label="Powered by AI"
             sx={{
-              background: 'linear-gradient(135deg, rgba(135, 169, 107, 0.9), rgba(107, 142, 71, 0.9))',
+              background: 'linear-gradient(135deg, rgba(135, 169, 107, 0.95), rgba(107, 142, 71, 0.95))',
               color: 'white',
               fontWeight: 700,
               mb: 3,
               px: 3,
               py: 1,
-              backdropFilter: 'blur(10px)'
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 8px 24px rgba(135, 169, 107, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.3)'
             }}
             icon={<Analytics />}
           />
@@ -690,7 +628,7 @@ const Dashboard = () => {
             sx={{ 
               mb: 3, 
               color: 'white',
-              textShadow: '0 2px 10px rgba(0,0,0,0.3)',
+              textShadow: '0 6px 24px rgba(0,0,0,0.6), 0 3px 12px rgba(0,0,0,0.4)',
               letterSpacing: '-0.01em'
             }}
           >
@@ -699,12 +637,17 @@ const Dashboard = () => {
           <Typography 
             variant="h6" 
             sx={{ 
-              color: 'rgba(255,255,255,0.9)', 
+              color: 'rgba(255,255,255,0.95)', 
               maxWidth: '700px', 
               mx: 'auto',
               lineHeight: 1.6,
               fontWeight: 400,
-              textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+              textShadow: '0 4px 16px rgba(0,0,0,0.5)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '20px 30px',
+              borderRadius: 3,
+              border: '1px solid rgba(255, 255, 255, 0.2)'
             }}
           >
             Experience next-generation financial management with AI-powered insights, 
@@ -730,15 +673,15 @@ const Dashboard = () => {
                       borderRadius: 5,
                       overflow: 'hidden',
                       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.15)',
                       backdropFilter: 'blur(20px)',
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                      border: '1px solid rgba(255,255,255,0.2)',
+                      boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+                      border: '1px solid rgba(255,255,255,0.25)',
                       position: 'relative',
                       '&:hover': { 
                         transform: 'translateY(-16px) scale(1.02)', 
-                        boxShadow: '0 32px 80px rgba(0,0,0,0.2)',
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        boxShadow: '0 32px 80px rgba(0,0,0,0.25)',
+                        background: 'rgba(255, 255, 255, 0.2)',
                         '& .feature-badge': {
                           transform: 'scale(1.1)'
                         },
@@ -770,12 +713,13 @@ const Dashboard = () => {
                         <Avatar 
                           className="feature-icon"
                           sx={{ 
-                            background: 'rgba(255,255,255,0.2)', 
+                            background: 'rgba(255,255,255,0.25)', 
                             width: 70, 
                             height: 70,
                             backdropFilter: 'blur(20px)',
-                            border: '2px solid rgba(255,255,255,0.3)',
-                            transition: 'all 0.3s ease'
+                            border: '2px solid rgba(255,255,255,0.4)',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
                           }}
                         >
                           <IconComponent sx={{ fontSize: 36 }} />
@@ -785,17 +729,22 @@ const Dashboard = () => {
                           label={feature.badge}
                           size="small"
                           sx={{ 
-                            background: 'rgba(255,255,255,0.25)', 
+                            background: 'rgba(255,255,255,0.3)', 
                             color: 'white', 
                             fontWeight: 700,
                             backdropFilter: 'blur(20px)',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            transition: 'all 0.3s ease'
+                            border: '1px solid rgba(255,255,255,0.4)',
+                            transition: 'all 0.3s ease',
+                            textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                           }}
                         />
                       </Box>
                       
-                      <Typography variant="h5" fontWeight="700" sx={{ mb: 2, lineHeight: 1.3 }}>
+                      <Typography variant="h5" fontWeight="700" sx={{ 
+                        mb: 2, 
+                        lineHeight: 1.3,
+                        textShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                      }}>
                         {feature.title}
                       </Typography>
                     </Box>
@@ -806,9 +755,10 @@ const Dashboard = () => {
                         sx={{ 
                           mb: 3, 
                           lineHeight: 1.7, 
-                          color: 'rgba(255,255,255,0.9)', 
+                          color: 'rgba(255,255,255,0.95)', 
                           flexGrow: 1,
-                          fontSize: '0.95rem'
+                          fontSize: '0.95rem',
+                          textShadow: '0 1px 4px rgba(0,0,0,0.3)'
                         }}
                       >
                         {feature.description}
@@ -819,7 +769,11 @@ const Dashboard = () => {
                         {feature.features.map((item, idx) => (
                           <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                             <CheckCircle sx={{ fontSize: 16, color: feature.accent }} />
-                            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500 }}>
+                            <Typography variant="body2" sx={{ 
+                              color: 'rgba(255,255,255,0.85)', 
+                              fontWeight: 500,
+                              textShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                            }}>
                               {item}
                             </Typography>
                           </Box>
@@ -832,7 +786,7 @@ const Dashboard = () => {
                         endIcon={<ArrowForward />}
                         sx={{ 
                           alignSelf: 'flex-start',
-                          borderColor: 'rgba(255,255,255,0.5)',
+                          borderColor: 'rgba(255,255,255,0.6)',
                           color: 'white',
                           fontWeight: 700,
                           borderRadius: 3,
@@ -841,11 +795,13 @@ const Dashboard = () => {
                           borderWidth: 2,
                           textTransform: 'none',
                           backdropFilter: 'blur(10px)',
+                          textShadow: '0 1px 3px rgba(0,0,0,0.3)',
                           '&:hover': { 
-                            backgroundColor: 'rgba(255,255,255,0.1)',
+                            backgroundColor: 'rgba(255,255,255,0.15)',
                             color: 'white',
                             transform: 'translateX(4px)',
-                            borderColor: 'white'
+                            borderColor: 'white',
+                            boxShadow: '0 4px 12px rgba(255,255,255,0.2)'
                           },
                           transition: 'all 0.3s ease'
                         }}
@@ -863,32 +819,45 @@ const Dashboard = () => {
       </Container>
 
       <style jsx global>{`
+        @keyframes glow {
+          0% { 
+            opacity: 0.5;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% { 
+            opacity: 0.8;
+            transform: translate(-50%, -50%) scale(1.1);
+          }
+        }
+        @keyframes gradientShift {
+          0% { 
+            background-position: 0% 50%; 
+          }
+          50% { 
+            background-position: 100% 50%; 
+          }
+          100% { 
+            background-position: 0% 50%; 
+          }
+        }
         @keyframes float {
           0%, 100% { 
             transform: translateY(0px) rotate(0deg); 
+            opacity: 0.6;
           }
           50% { 
-            transform: translateY(-20px) rotate(2deg); 
+            transform: translateY(-15px) rotate(180deg); 
+            opacity: 1;
           }
         }
         @keyframes pulse {
           0%, 100% { 
-            opacity: 0.7; 
+            opacity: 0.8; 
             transform: scale(1); 
           }
           50% { 
             opacity: 1; 
-            transform: scale(1.2); 
-          }
-        }
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+            transform: scale(1.05); 
           }
         }
       `}</style>
@@ -896,4 +865,5 @@ const Dashboard = () => {
   );
 };
 
+// Make sure this export default statement is present and correct
 export default Dashboard;

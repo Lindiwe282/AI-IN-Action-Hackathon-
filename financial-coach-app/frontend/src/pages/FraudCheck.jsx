@@ -17,16 +17,19 @@ import {
 } from "lucide-react";
 
 const FraudCheck = () => {
+  const [activeTab, setActiveTab] = useState('investment');
+  
+  // Investment Analysis State
   const [pdfFile, setPdfFile] = useState(null);
   const [amount, setAmount] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [promisedReturn, setPromisedReturn] = useState("");
   const [fraudResult, setFraudResult] = useState(null);
+  const [loadingFraud, setLoadingFraud] = useState(false);
 
+  // Phishing Detection State
   const [phishingInput, setPhishingInput] = useState("");
   const [phishingResult, setPhishingResult] = useState(null);
-
-  const [loadingFraud, setLoadingFraud] = useState(false);
   const [loadingPhish, setLoadingPhish] = useState(false);
 
   // --- Handlers ---
@@ -85,12 +88,15 @@ const FraudCheck = () => {
     }, 1500);
   };
 
-  const resetForm = () => {
+  const resetInvestmentForm = () => {
     setPdfFile(null);
     setAmount("");
     setInterestRate("");
     setPromisedReturn("");
     setFraudResult(null);
+  };
+
+  const resetPhishingForm = () => {
     setPhishingInput("");
     setPhishingResult(null);
   };
@@ -154,7 +160,7 @@ const FraudCheck = () => {
             line-height: 1.5;
           }
 
-          .card { 
+          .tabs-container {
             background: linear-gradient(135deg, 
               rgba(255, 255, 255, 0.95) 0%, 
               rgba(248, 250, 252, 0.9) 100%
@@ -162,16 +168,14 @@ const FraudCheck = () => {
             backdrop-filter: blur(20px);
             border: 1px solid rgba(135, 169, 107, 0.2);
             border-radius: 24px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
             box-shadow: 
               0 20px 40px rgba(0, 0, 0, 0.08),
               0 0 0 1px rgba(135, 169, 107, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
             position: relative;
           }
 
-          .card::before {
+          .tabs-container::before {
             content: '';
             position: absolute;
             top: -20px;
@@ -183,11 +187,52 @@ const FraudCheck = () => {
             border-radius: 2px;
           }
 
-          .card:hover { 
-            transform: translateY(-4px);
-            box-shadow: 
-              0 32px 64px rgba(0, 0, 0, 0.12),
-              0 0 0 1px rgba(135, 169, 107, 0.2);
+          .tabs-header {
+            display: flex;
+            background: linear-gradient(135deg, rgba(135, 169, 107, 0.08) 0%, rgba(248, 250, 252, 0.8) 100%);
+            border-bottom: 1px solid rgba(135, 169, 107, 0.2);
+          }
+
+          .tab-button {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            background: none;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #64748b;
+            position: relative;
+          }
+
+          .tab-button.active {
+            color: #1e293b;
+            background: linear-gradient(135deg, rgba(135, 169, 107, 0.15) 0%, rgba(255, 255, 255, 0.8) 100%);
+          }
+
+          .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #87a96b, #6b8e47);
+            border-radius: 2px 2px 0 0;
+          }
+
+          .tab-button:hover:not(.active) {
+            background: rgba(135, 169, 107, 0.05);
+            color: #1e293b;
+          }
+
+          .tab-content {
+            padding: 2.5rem;
           }
 
           .card-title { 
@@ -426,6 +471,13 @@ const FraudCheck = () => {
             font-weight: 500;
           }
 
+          .reset-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(135, 169, 107, 0.2);
+            text-align: center;
+          }
+
           @media (max-width: 768px) {
             .fraud-container {
               padding: 5rem 1rem 1rem;
@@ -435,8 +487,13 @@ const FraudCheck = () => {
               font-size: 2.5rem;
             }
             
-            .card {
+            .tab-content {
               padding: 1.5rem;
+            }
+            
+            .tab-button {
+              padding: 1rem;
+              font-size: 1rem;
             }
             
             .stats-grid {
@@ -455,180 +512,210 @@ const FraudCheck = () => {
           </p>
         </header>
 
-        {/* PDF Fraud Detection */}
-        <div className="card">
-          <h2 className="card-title">Investment Document Analysis</h2>
-          
-          <div className="file-upload-area">
-            <label htmlFor="pdf-upload" className="file-upload-label">
-              <Upload size={24} />
-              Click to upload PDF document or drag and drop
-              <input 
-                id="pdf-upload"
-                type="file" 
-                accept="application/pdf" 
-                onChange={handleFileChange}
-              />
-            </label>
-          </div>
-          
-          {pdfFile && (
-            <div className="alert alert-success">
-              <CheckCircle size={20} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
-              Selected: {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
-            </div>
-          )}
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-            <div style={{ position: 'relative' }}>
-              <DollarSign size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b8e47', zIndex: 1 }} />
-              <input 
-                type="number" 
-                placeholder="Investment Amount (ZAR)" 
-                value={amount} 
-                onChange={e => setAmount(e.target.value)} 
-                className="input-field"
-                style={{ paddingLeft: '3rem' }}
-              />
-            </div>
-            <div style={{ position: 'relative' }}>
-              <TrendingUp size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b8e47', zIndex: 1 }} />
-              <input 
-                type="number" 
-                placeholder="Interest Rate (%)" 
-                value={interestRate} 
-                onChange={e => setInterestRate(e.target.value)} 
-                className="input-field"
-                style={{ paddingLeft: '3rem' }}
-              />
-            </div>
-            <div style={{ position: 'relative' }}>
-              <Target size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b8e47', zIndex: 1 }} />
-              <input 
-                type="number" 
-                placeholder="Promised Return (%)" 
-                value={promisedReturn} 
-                onChange={e => setPromisedReturn(e.target.value)} 
-                className="input-field"
-                style={{ paddingLeft: '3rem' }}
-              />
-            </div>
-          </div>
-          
-          <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <div className="tabs-container">
+          <div className="tabs-header">
             <button 
-              className="btn btn-primary" 
-              onClick={handleSubmitFraud} 
-              disabled={loadingFraud || !pdfFile}
+              className={`tab-button ${activeTab === 'investment' ? 'active' : ''}`}
+              onClick={() => setActiveTab('investment')}
             >
-              <Search size={20} />
-              {loadingFraud ? "Analyzing..." : "Analyze for Fraud"}
+              <FileText size={20} />
+              Investment Document Analysis
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'phishing' ? 'active' : ''}`}
+              onClick={() => setActiveTab('phishing')}
+            >
+              <Shield size={20} />
+              Phishing & Scam Detection
             </button>
           </div>
-          
-          {loadingFraud && (
-            <div className="progress-bar">
-              <div className="progress-fill"></div>
-            </div>
-          )}
-          
-          {fraudResult && (
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-value">
-                  <BarChart3 size={24} />
-                  {(fraudResult.fraud_probability * 100).toFixed(1)}%
-                </div>
-                <div className="stat-label">Fraud Risk Score</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-value" style={{ color: fraudResult.is_fraud ? '#dc2626' : '#166534' }}>
-                  {fraudResult.is_fraud ? (
-                    <><AlertTriangle size={24} />HIGH RISK</>
-                  ) : (
-                    <><CheckCircle size={24} />LOW RISK</>
-                  )}
-                </div>
-                <div className="stat-label">Assessment</div>
-              </div>
-            </div>
-          )}
-          
-          {fraudResult?.red_flags?.length > 0 && (
-            <div className="red-flags">
-              <h4 style={{ margin: '0 0 1rem 0', color: '#dc2626', display: 'flex', alignItems: 'center' }}>
-                <AlertTriangle size={20} style={{ marginRight: '0.5rem' }} />
-                Warning Signs Detected:
-              </h4>
-              <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
-                {fraudResult.red_flags.map((flag, idx) => (
-                  <li key={idx}>{flag}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
 
-        {/* Phishing Detection */}
-        <div className="card">
-          <h2 className="card-title">Phishing & Scam Detection</h2>
-          <div style={{ position: 'relative' }}>
-            <Link size={20} style={{ position: 'absolute', left: '1rem', top: '1.5rem', color: '#6b8e47', zIndex: 1 }} />
-            <textarea
-              placeholder="Paste suspicious text, email content, or website link here for analysis..."
-              value={phishingInput}
-              onChange={e => setPhishingInput(e.target.value)}
-              className="input-field"
-              rows={5}
-              style={{ resize: 'vertical', minHeight: '120px', paddingLeft: '3rem' }}
-            />
-          </div>
-          
-          <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
-            <button 
-              className="btn btn-primary" 
-              onClick={handleSubmitPhishing} 
-              disabled={loadingPhish || !phishingInput}
-            >
-              <Eye size={20} />
-              {loadingPhish ? "Checking..." : "Check for Phishing"}
-            </button>
-          </div>
-          
-          {loadingPhish && (
-            <div className="progress-bar">
-              <div className="progress-fill"></div>
-            </div>
-          )}
-          
-          {phishingResult && (
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-value">
-                  <BarChart3 size={24} />
-                  {(phishingResult.risk_score * 100).toFixed(1)}%
+          <div className="tab-content">
+            {activeTab === 'investment' && (
+              <div>
+                <h2 className="card-title">Investment Document Analysis</h2>
+                
+                <div className="file-upload-area">
+                  <label htmlFor="pdf-upload" className="file-upload-label">
+                    <Upload size={24} />
+                    Click to upload PDF document or drag and drop
+                    <input 
+                      id="pdf-upload"
+                      type="file" 
+                      accept="application/pdf" 
+                      onChange={handleFileChange}
+                    />
+                  </label>
                 </div>
-                <div className="stat-label">Phishing Risk Score</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-value" style={{ color: phishingResult.is_phishing ? '#dc2626' : '#166534' }}>
-                  {phishingResult.is_phishing ? (
-                    <><AlertTriangle size={24} />SUSPICIOUS</>
-                  ) : (
-                    <><CheckCircle size={24} />SAFE</>
-                  )}
+                
+                {pdfFile && (
+                  <div className="alert alert-success">
+                    <CheckCircle size={20} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                    Selected: {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
+                  </div>
+                )}
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                  <div style={{ position: 'relative' }}>
+                    <DollarSign size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b8e47', zIndex: 1 }} />
+                    <input 
+                      type="number" 
+                      placeholder="Investment Amount (ZAR)" 
+                      value={amount} 
+                      onChange={e => setAmount(e.target.value)} 
+                      className="input-field"
+                      style={{ paddingLeft: '3rem' }}
+                    />
+                  </div>
+                  <div style={{ position: 'relative' }}>
+                    <TrendingUp size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b8e47', zIndex: 1 }} />
+                    <input 
+                      type="number" 
+                      placeholder="Interest Rate (%)" 
+                      value={interestRate} 
+                      onChange={e => setInterestRate(e.target.value)} 
+                      className="input-field"
+                      style={{ paddingLeft: '3rem' }}
+                    />
+                  </div>
+                  <div style={{ position: 'relative' }}>
+                    <Target size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b8e47', zIndex: 1 }} />
+                    <input 
+                      type="number" 
+                      placeholder="Promised Return (%)" 
+                      value={promisedReturn} 
+                      onChange={e => setPromisedReturn(e.target.value)} 
+                      className="input-field"
+                      style={{ paddingLeft: '3rem' }}
+                    />
+                  </div>
                 </div>
-                <div className="stat-label">Assessment</div>
-              </div>
-            </div>
-          )}
-        </div>
+                
+                <div style={{ textAlign: "center", marginTop: "2rem" }}>
+                  <button 
+                    className="btn btn-primary" 
+                    onClick={handleSubmitFraud} 
+                    disabled={loadingFraud || !pdfFile}
+                  >
+                    <Search size={20} />
+                    {loadingFraud ? "Analyzing..." : "Analyze for Fraud"}
+                  </button>
+                </div>
+                
+                {loadingFraud && (
+                  <div className="progress-bar">
+                    <div className="progress-fill"></div>
+                  </div>
+                )}
+                
+                {fraudResult && (
+                  <div className="stats-grid">
+                    <div className="stat-card">
+                      <div className="stat-value">
+                        <BarChart3 size={24} />
+                        {(fraudResult.fraud_probability * 100).toFixed(1)}%
+                      </div>
+                      <div className="stat-label">Fraud Risk Score</div>
+                    </div>
+                    <div className="stat-card">
+                      <div className="stat-value" style={{ color: fraudResult.is_fraud ? '#dc2626' : '#166534' }}>
+                        {fraudResult.is_fraud ? (
+                          <><AlertTriangle size={24} />HIGH RISK</>
+                        ) : (
+                          <><CheckCircle size={24} />LOW RISK</>
+                        )}
+                      </div>
+                      <div className="stat-label">Assessment</div>
+                    </div>
+                  </div>
+                )}
+                
+                {fraudResult?.red_flags?.length > 0 && (
+                  <div className="red-flags">
+                    <h4 style={{ margin: '0 0 1rem 0', color: '#dc2626', display: 'flex', alignItems: 'center' }}>
+                      <AlertTriangle size={20} style={{ marginRight: '0.5rem' }} />
+                      Warning Signs Detected:
+                    </h4>
+                    <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+                      {fraudResult.red_flags.map((flag, idx) => (
+                        <li key={idx}>{flag}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-        <div style={{ textAlign: "center", marginTop: "3rem" }}>
-          <button className="btn btn-secondary" onClick={resetForm}>
-            <RefreshCw size={20} />
-            Reset All Forms
-          </button>
+                <div className="reset-section">
+                  <button className="btn btn-secondary" onClick={resetInvestmentForm}>
+                    <RefreshCw size={20} />
+                    Reset Investment Form
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'phishing' && (
+              <div>
+                <h2 className="card-title">Phishing & Scam Detection</h2>
+                <div style={{ position: 'relative' }}>
+                  <Link size={20} style={{ position: 'absolute', left: '1rem', top: '1.5rem', color: '#6b8e47', zIndex: 1 }} />
+                  <textarea
+                    placeholder="Paste suspicious text, email content, or website link here for analysis..."
+                    value={phishingInput}
+                    onChange={e => setPhishingInput(e.target.value)}
+                    className="input-field"
+                    rows={5}
+                    style={{ resize: 'vertical', minHeight: '120px', paddingLeft: '3rem' }}
+                  />
+                </div>
+                
+                <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+                  <button 
+                    className="btn btn-primary" 
+                    onClick={handleSubmitPhishing} 
+                    disabled={loadingPhish || !phishingInput}
+                  >
+                    <Eye size={20} />
+                    {loadingPhish ? "Checking..." : "Check for Phishing"}
+                  </button>
+                </div>
+                
+                {loadingPhish && (
+                  <div className="progress-bar">
+                    <div className="progress-fill"></div>
+                  </div>
+                )}
+                
+                {phishingResult && (
+                  <div className="stats-grid">
+                    <div className="stat-card">
+                      <div className="stat-value">
+                        <BarChart3 size={24} />
+                        {(phishingResult.risk_score * 100).toFixed(1)}%
+                      </div>
+                      <div className="stat-label">Phishing Risk Score</div>
+                    </div>
+                    <div className="stat-card">
+                      <div className="stat-value" style={{ color: phishingResult.is_phishing ? '#dc2626' : '#166534' }}>
+                        {phishingResult.is_phishing ? (
+                          <><AlertTriangle size={24} />SUSPICIOUS</>
+                        ) : (
+                          <><CheckCircle size={24} />SAFE</>
+                        )}
+                      </div>
+                      <div className="stat-label">Assessment</div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="reset-section">
+                  <button className="btn btn-secondary" onClick={resetPhishingForm}>
+                    <RefreshCw size={20} />
+                    Reset Phishing Form
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
