@@ -170,6 +170,56 @@ def api_health():
         'analyzer_running': Analyzer.is_running if hasattr(Analyzer, 'is_running') else False
     })
 
+@app.route('/api/investment/portfolio')
+def get_investment_portfolio():
+    """Get sample investment portfolio"""
+    try:
+        # Sample investment portfolio data
+        portfolio = [
+            {'symbol': 'AAPL', 'current_price': 175.20, 'quantity': 25.5, 'sector': 'Technology'},
+            {'symbol': 'GOOGL', 'current_price': 142.80, 'quantity': 15.0, 'sector': 'Technology'},
+            {'symbol': 'MSFT', 'current_price': 415.30, 'quantity': 12.0, 'sector': 'Technology'},
+            {'symbol': 'JPM', 'current_price': 155.90, 'quantity': 20.0, 'sector': 'Financial'},
+            {'symbol': 'JNJ', 'current_price': 162.40, 'quantity': 18.0, 'sector': 'Healthcare'},
+        ]
+        
+        return jsonify({
+            'success': True,
+            'portfolio': portfolio,
+            'total_holdings': len(portfolio)
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/hedge/portfolio')
+def get_hedge_portfolio():
+    """Get sample hedge fund portfolio"""
+    try:
+        # Sample hedge fund portfolio data
+        portfolio = [
+            {'symbol': 'NVDA', 'current_price': 485.60, 'quantity': 8.5, 'strategy': 'Growth'},
+            {'symbol': 'TSLA', 'current_price': 248.90, 'quantity': 12.0, 'strategy': 'Momentum'},
+            {'symbol': 'AMD', 'current_price': 162.30, 'quantity': 15.0, 'strategy': 'Tech Growth'},
+            {'symbol': 'NFLX', 'current_price': 445.20, 'quantity': 6.0, 'strategy': 'Media'},
+            {'symbol': 'META', 'current_price': 518.70, 'quantity': 7.5, 'strategy': 'Social Media'},
+        ]
+        
+        return jsonify({
+            'success': True,
+            'portfolio': portfolio,
+            'total_holdings': len(portfolio)
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 # SocketIO event handlers
 @socketio.on('connect')
 def handle_connect():

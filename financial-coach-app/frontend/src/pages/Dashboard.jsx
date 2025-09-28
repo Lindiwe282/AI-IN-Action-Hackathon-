@@ -62,16 +62,16 @@ const FEATURES = [
     accent: '#22c55e',
     features: ['Real-time data', 'Risk analysis', 'ROI tracking']
   },
-  {
-    title: 'Loan Optimizer',
-    description: 'Intelligent loan comparison with payment scenarios, refinancing opportunities, and debt optimization',
-    icon: MonetizationOn,
-    gradient: 'linear-gradient(135deg, rgba(184, 212, 126, 0.8) 0%, rgba(164, 195, 115, 0.9) 100%)',
-    path: '/loan',
-    badge: 'Smart Compare',
-    accent: '#16a34a',
-    features: ['Rate comparison', 'Payment calc', 'Refinance alerts']
-  },
+  // {
+  //   title: 'Loan Optimizer',
+  //   description: 'Intelligent loan comparison with payment scenarios, refinancing opportunities, and debt optimization',
+  //   icon: MonetizationOn,
+  //   gradient: 'linear-gradient(135deg, rgba(184, 212, 126, 0.8) 0%, rgba(164, 195, 115, 0.9) 100%)',
+  //   path: '/loan',
+  //   badge: 'Smart Compare',
+  //   accent: '#16a34a',
+  //   features: ['Rate comparison', 'Payment calc', 'Refinance alerts']
+  // },
   {
     title: 'Interactive Learning',
     description: 'Gamified financial education with personalized learning paths, quizzes, and achievement tracking',
@@ -92,16 +92,16 @@ const FEATURES = [
     accent: '#166534',
     features: ['Threat detection', 'Instant alerts', 'Security tips']
   },
-  {
-    title: 'Advanced Insights',
-    description: 'Comprehensive analytics dashboard with predictive modeling, trend analysis, and custom reports',
-    icon: Assessment,
-    gradient: 'linear-gradient(135deg, rgba(164, 195, 115, 0.8) 0%, rgba(135, 169, 107, 0.9) 100%)',
-    path: '/reports',
-    badge: 'Premium',
-    accent: '#14532d',
-    features: ['Predictive models', 'Custom reports', 'Trend analysis']
-  },
+  // {
+  //   title: 'Advanced Insights',
+  //   description: 'Comprehensive analytics dashboard with predictive modeling, trend analysis, and custom reports',
+  //   icon: Assessment,
+  //   gradient: 'linear-gradient(135deg, rgba(164, 195, 115, 0.8) 0%, rgba(135, 169, 107, 0.9) 100%)',
+  //   path: '/reports',
+  //   badge: 'Premium',
+  //   accent: '#14532d',
+  //   features: ['Predictive models', 'Custom reports', 'Trend analysis']
+  // },
 ];
 
 const FINANCIAL_FACTS = [

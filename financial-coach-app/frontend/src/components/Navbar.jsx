@@ -24,6 +24,7 @@ import {
   AccountBalanceWallet,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import BrokerDialog from './BrokerDialog';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -31,12 +32,13 @@ const Navbar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [brokerDialogOpen, setBrokerDialogOpen] = React.useState(false);
 
   const menuItems = [
     { label: 'Dashboard', path: '/dashboard', icon: DashboardIcon },
     { label: 'Planner', path: '/planner', icon: PlannerIcon },
     { label: 'Investment', path: '/investment', icon: InvestmentIcon },
-    { label: 'Loan', path: '/loan', icon: LoanIcon },
+    // { label: 'Loan', path: '/loan', icon: LoanIcon },
     { label: 'Literacy', path: '/literacy', icon: LiteracyIcon },
     { label: 'Security', path: '/fraud-check', icon: FraudIcon },
   ];
@@ -163,6 +165,7 @@ const Navbar = () => {
               {/* Optional: Profile/Settings Button */}
               <Button
                 variant="outlined"
+                onClick={() => setBrokerDialogOpen(true)}
                 sx={{
                   ml: 2,
                   borderColor: '#87a96b',
@@ -256,6 +259,12 @@ const Navbar = () => {
           )}
         </Toolbar>
       </Container>
+
+      {/* Broker Dialog */}
+      <BrokerDialog 
+        open={brokerDialogOpen} 
+        onClose={() => setBrokerDialogOpen(false)} 
+      />
     </AppBar>
   );
 };
