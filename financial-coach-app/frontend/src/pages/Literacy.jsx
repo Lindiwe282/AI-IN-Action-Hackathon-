@@ -125,7 +125,6 @@ const Literacy = () => {
       title: "Simple Interest",
       desc: "Calculated only on the original principal amount. Formula: Simple Interest = Principal × Rate × Time.",
       examples: [
-        "Loan Example: Borrow R10,000 at 10% per year for 3 years → Interest = R3,000",
         "Investment Example: Deposit R5,000 at 6% for 2 years → Interest = R600"
       ],
       gradient: "sage-medium"
@@ -134,8 +133,7 @@ const Literacy = () => {
       title: "Compound Interest",
       desc: "Calculated on the principal amount plus any accumulated interest. Formula: Compound Interest = Principal × (1 + Rate / Number of times interest applied per year)^(Number of times interest applied × Years) - Principal.",
       examples: [
-        "Investment: R5,000 at 6% annually, compounded quarterly for 2 years → ≈ R636 interest",
-        "Loan: R10,000 at 10% annually, compounded monthly for 3 years → ≈ R3,347 interest"
+        "Investment: R5,000 at 6% annually, compounded quarterly for 2 years → ≈ R636 interest"
       ],
       gradient: "sage-dark"
     },
@@ -143,8 +141,7 @@ const Literacy = () => {
       title: "Compounding Periods",
       desc: "How often interest is applied: annually, semi-annually, quarterly, monthly, daily. More frequent compounding increases total interest.",
       examples: [
-        "Monthly vs annually: R5,000 at 6% compounded monthly earns more than annually",
-        "Short-term loan compounded daily accumulates more interest than monthly"
+        "Monthly vs annually: R5,000 at 6% compounded monthly earns more than annually"
       ],
       gradient: "sage-forest"
     }
