@@ -335,8 +335,8 @@ const Literacy = () => {
                   <div className="score-label">Your Score</div>
                 </div>
                 <div className="xp-display">
-                  <div className="xp-number">{xpEarned} XP</div>
-                  <div className="xp-label">Experience Points</div>
+                  <div className="xp-number">+{xpEarned} Aura</div>
+                  <div className="xp-label">Aura Points</div>
                 </div>
               </div>
 
