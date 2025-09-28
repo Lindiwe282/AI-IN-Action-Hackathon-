@@ -117,6 +117,7 @@ from routes.investment import investment_bp
 from routes.loan import loan_bp
 from routes.literacy import literacy_bp
 from routes.fraud import fraud_bp
+from routes.hedge import hedge_bp
 
 # Only import portfolio and sentiment routes if they can be imported safely
 try:
@@ -133,6 +134,7 @@ app.register_blueprint(investment_bp, url_prefix='/api/investment')
 app.register_blueprint(loan_bp, url_prefix='/api/loan')
 app.register_blueprint(literacy_bp, url_prefix='/api/literacy')
 app.register_blueprint(fraud_bp, url_prefix='/api/fraud')
+app.register_blueprint(hedge_bp, url_prefix='/api/hedge')
 
 if PORTFOLIO_AVAILABLE:
     app.register_blueprint(portfolio_bp)  # Already has /api prefix
@@ -157,7 +159,7 @@ def api_health():
     except Exception as e:
         db_status = f'error: {str(e)}'
     
-    services = ['planner', 'investment', 'loan', 'literacy', 'fraud']
+    services = ['planner', 'investment', 'loan', 'literacy', 'fraud', 'hedge']
     if PORTFOLIO_AVAILABLE:
         services.extend(['portfolio', 'sentiment'])
     

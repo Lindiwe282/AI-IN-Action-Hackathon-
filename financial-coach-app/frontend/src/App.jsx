@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Planner from './pages/Planner';
 import Investment from './pages/Investment';
+import HedgeInvestments from './pages/HedgeInvestments';
 import NewsAnalyzer from './pages/NewsAnalyzer';
 import Loan from './pages/Loan';
 import Literacy from './pages/Literacy';
@@ -41,9 +42,6 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <box>
-          
-        </box>
         <div className="App">
           <Navbar />
           <main style={{ paddingTop: '80px', minHeight: '100vh' }}>
@@ -52,6 +50,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/planner" element={<Planner />} />
               <Route path="/investment" element={<Investment />} />
+              <Route path="/hedge-investments" element={<HedgeInvestments />} />
               <Route path="/news-analyzer" element={<NewsAnalyzer />} />
               <Route path="/loan" element={<Loan />} />
               <Route path="/literacy" element={<Literacy />} />
