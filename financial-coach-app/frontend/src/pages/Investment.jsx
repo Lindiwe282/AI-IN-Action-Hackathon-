@@ -23,34 +23,46 @@ import axios from 'axios';
 
 const URL_API = 'http://localhost:5000/api';
 
-// Chart colors for consistent theming
+// Sage green color palette
+const SAGE_COLORS = {
+  light: '#f8faf8',
+  lightMedium: '#e8efe8',
+  medium: '#a9ba9d',
+  darkMedium: '#87a96b',
+  dark: '#6b8e47',
+  darker: '#556b3a',
+  text: '#1e293b',
+  textLight: '#64748b'
+};
+
+// Chart colors using sage green palette
 const CHART_COLORS = [
-  '#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1', 
-  '#d084d0', '#87d068', '#ffa726', '#ef5350', '#5c6bc0'
+  '#87a96b', '#a9ba9d', '#6b8e47', '#556b3a', '#c1d0a3',
+  '#8f9779', '#9cb069', '#7a8c5a', '#a3b18a', '#5a7240'
 ];
 
-// Custom styled components with financial coach theme
+// Custom styled components with sage green theme
 const StyledContainer = styled(Container)(({ theme }) => ({
   minHeight: '100vh',
   background: theme.palette.mode === 'dark' 
-    ? 'linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%)' 
-    : 'linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%)',
+    ? 'linear-gradient(180deg, #0a0f0a 0%, #1a1f1a 100%)' 
+    : 'linear-gradient(180deg, #f8faf8 0%, #e8efe8 100%)',
   paddingTop: theme.spacing(4),
   paddingBottom: theme.spacing(4),
 }));
 
 const GlassCard = styled(Paper)(({ theme }) => ({
   background: theme.palette.mode === 'dark'
-    ? 'rgba(255, 255, 255, 0.05)'
-    : 'rgba(255, 255, 255, 0.9)',
+    ? 'rgba(135, 169, 107, 0.05)'
+    : 'rgba(248, 250, 248, 0.9)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
   border: `1px solid ${theme.palette.mode === 'dark' 
-    ? 'rgba(255, 255, 255, 0.1)' 
-    : 'rgba(255, 255, 255, 0.3)'}`,
+    ? 'rgba(135, 169, 107, 0.1)' 
+    : 'rgba(135, 169, 107, 0.2)'}`,
   boxShadow: theme.palette.mode === 'dark'
     ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-    : '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+    : '0 8px 32px 0 rgba(135, 169, 107, 0.15)',
   borderRadius: theme.spacing(2.5),
   overflow: 'hidden',
   position: 'relative',
@@ -59,25 +71,25 @@ const GlassCard = styled(Paper)(({ theme }) => ({
     transform: 'translateY(-4px)',
     boxShadow: theme.palette.mode === 'dark'
       ? '0 12px 48px 0 rgba(0, 0, 0, 0.5)'
-      : '0 12px 48px 0 rgba(31, 38, 135, 0.25)',
+      : '0 12px 48px 0 rgba(135, 169, 107, 0.25)',
   }
 }));
 
 const HeaderBox = styled(Box)(({ theme }) => ({
   background: theme.palette.mode === 'dark' 
-    ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)' 
-    : 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
+    ? 'linear-gradient(135deg, #1a1f1a 0%, #2d322d 100%)' 
+    : 'linear-gradient(135deg, #ffffff 0%, #f8faf8 100%)',
   padding: theme.spacing(3),
   borderRadius: theme.spacing(3),
   marginBottom: theme.spacing(4),
   boxShadow: theme.palette.mode === 'dark'
     ? '0 8px 32px rgba(0,0,0,0.8)'
-    : '0 8px 32px rgba(0,0,0,0.08)',
+    : '0 8px 32px rgba(135, 169, 107, 0.1)',
   backdropFilter: 'blur(10px)',
   border: '1px solid',
   borderColor: theme.palette.mode === 'dark'
-    ? 'rgba(255,255,255,0.1)'
-    : 'rgba(0,0,0,0.05)',
+    ? 'rgba(135, 169, 107, 0.1)'
+    : 'rgba(135, 169, 107, 0.1)',
 }));
 
 const SearchBox = styled(Paper)(({ theme }) => ({
@@ -86,16 +98,16 @@ const SearchBox = styled(Paper)(({ theme }) => ({
   borderRadius: theme.spacing(3),
   padding: '4px 16px',
   background: theme.palette.mode === 'dark'
-    ? 'rgba(255,255,255,0.05)'
-    : 'rgba(0,0,0,0.02)',
+    ? 'rgba(135, 169, 107, 0.05)'
+    : 'rgba(135, 169, 107, 0.03)',
   border: '1px solid',
   borderColor: theme.palette.mode === 'dark'
-    ? 'rgba(255,255,255,0.1)'
-    : 'rgba(0,0,0,0.08)',
+    ? 'rgba(135, 169, 107, 0.1)'
+    : 'rgba(135, 169, 107, 0.2)',
   transition: 'all 0.3s ease',
   '&:hover': {
-    borderColor: theme.palette.primary.main,
-    boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.1)}`,
+    borderColor: SAGE_COLORS.darkMedium,
+    boxShadow: `0 0 0 2px ${alpha(SAGE_COLORS.darkMedium, 0.1)}`,
   },
 }));
 
@@ -103,10 +115,10 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
   borderRadius: theme.spacing(2),
   fontWeight: 600,
   background: status === 'connected' 
-    ? 'linear-gradient(45deg, #4caf50 30%, #81c784 90%)'
+    ? 'linear-gradient(45deg, #87a96b 30%, #a9ba9d 90%)'
     : status === 'running'
-    ? 'linear-gradient(45deg, #2196f3 30%, #64b5f6 90%)'
-    : 'linear-gradient(45deg, #f44336 30%, #ef5350 90%)',
+    ? 'linear-gradient(45deg, #6b8e47 30%, #87a96b 90%)'
+    : 'linear-gradient(45deg, #d32f2f 30%, #f44336 90%)',
   color: 'white',
   '& .MuiChip-icon': {
     color: 'white',
@@ -116,16 +128,16 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
 const PortfolioChip = styled(Chip)(({ theme }) => ({
   margin: theme.spacing(0.5),
   borderRadius: theme.spacing(2),
-  background: alpha(theme.palette.primary.main, 0.1),
-  border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+  background: alpha(SAGE_COLORS.darkMedium, 0.1),
+  border: `1px solid ${alpha(SAGE_COLORS.darkMedium, 0.3)}`,
   '&:hover': {
-    background: alpha(theme.palette.primary.main, 0.2),
+    background: alpha(SAGE_COLORS.darkMedium, 0.2),
   }
 }));
 
 const StockCard = styled(Card)(({ theme, trend }) => ({
   background: theme.palette.mode === 'dark'
-    ? 'rgba(255, 255, 255, 0.05)'
+    ? 'rgba(135, 169, 107, 0.05)'
     : 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(10px)',
   borderRadius: theme.spacing(2),
@@ -133,7 +145,7 @@ const StockCard = styled(Card)(({ theme, trend }) => ({
     ? alpha('#4caf50', 0.3) 
     : trend === 'down' 
     ? alpha('#f44336', 0.3) 
-    : alpha(theme.palette.primary.main, 0.3)}`,
+    : alpha(SAGE_COLORS.darkMedium, 0.3)}`,
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   position: 'relative',
   overflow: 'hidden',
@@ -141,12 +153,12 @@ const StockCard = styled(Card)(({ theme, trend }) => ({
     transform: 'translateY(-2px)',
     boxShadow: theme.palette.mode === 'dark'
       ? '0 8px 25px rgba(0, 0, 0, 0.4)'
-      : '0 8px 25px rgba(0, 0, 0, 0.15)',
+      : '0 8px 25px rgba(135, 169, 107, 0.15)',
     border: `1px solid ${trend === 'up' 
       ? '#4caf50' 
       : trend === 'down' 
       ? '#f44336' 
-      : theme.palette.primary.main}`,
+      : SAGE_COLORS.darkMedium}`,
   },
   '&::before': {
     content: '""',
@@ -159,7 +171,7 @@ const StockCard = styled(Card)(({ theme, trend }) => ({
       ? 'linear-gradient(90deg, #4caf50 0%, #81c784 100%)' 
       : trend === 'down' 
       ? 'linear-gradient(90deg, #f44336 0%, #ef5350 100%)'
-      : 'linear-gradient(90deg, #2196f3 0%, #64b5f6 100%)',
+      : `linear-gradient(90deg, ${SAGE_COLORS.darkMedium} 0%, ${SAGE_COLORS.medium} 100%)`,
   }
 }));
 
@@ -173,17 +185,17 @@ const AnalysisModal = styled(Box)(({ theme }) => ({
   maxHeight: '90vh',
   overflow: 'auto',
   background: theme.palette.mode === 'dark'
-    ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-    : 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
+    ? 'linear-gradient(135deg, #1a1f1a 0%, #2d322d 100%)'
+    : 'linear-gradient(135deg, #ffffff 0%, #f8faf8 100%)',
   borderRadius: theme.spacing(3),
   boxShadow: theme.palette.mode === 'dark'
     ? '0 20px 60px rgba(0,0,0,0.8)'
-    : '0 20px 60px rgba(0,0,0,0.15)',
+    : '0 20px 60px rgba(135, 169, 107, 0.15)',
   padding: theme.spacing(4),
   border: '1px solid',
   borderColor: theme.palette.mode === 'dark'
-    ? 'rgba(255,255,255,0.1)'
-    : 'rgba(0,0,0,0.08)',
+    ? 'rgba(135, 169, 107, 0.1)'
+    : 'rgba(135, 169, 107, 0.1)',
 }));
 
 const ModalBox = styled(Box)(({ theme }) => ({
@@ -193,29 +205,29 @@ const ModalBox = styled(Box)(({ theme }) => ({
   transform: 'translate(-50%, -50%)',
   width: 450,
   background: theme.palette.mode === 'dark'
-    ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-    : 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
+    ? 'linear-gradient(135deg, #1a1f1a 0%, #2d322d 100%)'
+    : 'linear-gradient(135deg, #ffffff 0%, #f8faf8 100%)',
   borderRadius: theme.spacing(3),
   boxShadow: theme.palette.mode === 'dark'
     ? '0 20px 40px rgba(0,0,0,0.8)'
-    : '0 20px 40px rgba(0,0,0,0.2)',
+    : '0 20px 40px rgba(135, 169, 107, 0.2)',
   padding: theme.spacing(4),
   border: '1px solid',
   borderColor: theme.palette.mode === 'dark'
-    ? 'rgba(255,255,255,0.1)'
-    : 'rgba(0,0,0,0.08)',
+    ? 'rgba(135, 169, 107, 0.1)'
+    : 'rgba(135, 169, 107, 0.1)',
 }));
 
 const StrategyCard = styled(Card)(({ theme }) => ({
   background: theme.palette.mode === 'dark' 
-    ? 'rgba(255,255,255,0.03)' 
-    : 'rgba(255,255,255,0.9)',
+    ? 'rgba(135, 169, 107, 0.03)' 
+    : 'rgba(255, 255, 255, 0.9)',
   backdropFilter: 'blur(20px)',
   borderRadius: theme.spacing(3),
   border: '1px solid',
   borderColor: theme.palette.mode === 'dark'
-    ? 'rgba(255,255,255,0.1)'
-    : 'rgba(0,0,0,0.08)',
+    ? 'rgba(135, 169, 107, 0.1)'
+    : 'rgba(135, 169, 107, 0.1)',
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   overflow: 'hidden',
   position: 'relative',
@@ -223,7 +235,7 @@ const StrategyCard = styled(Card)(({ theme }) => ({
     transform: 'translateY(-8px)',
     boxShadow: theme.palette.mode === 'dark'
       ? '0 20px 40px rgba(0,0,0,0.5)'
-      : '0 20px 40px rgba(0,0,0,0.1)',
+      : '0 20px 40px rgba(135, 169, 107, 0.1)',
   },
   '&::before': {
     content: '""',
@@ -232,7 +244,7 @@ const StrategyCard = styled(Card)(({ theme }) => ({
     left: 0,
     right: 0,
     height: '4px',
-    background: 'linear-gradient(45deg, #2196f3 30%, #4caf50 90%)',
+    background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)`,
   }
 }));
 
@@ -563,14 +575,19 @@ const Investment = () => {
         <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Avatar sx={{ bgcolor: theme.palette.primary.main, width: 56, height: 56 }}>
+              <Avatar sx={{ 
+                bgcolor: SAGE_COLORS.darkMedium, 
+                width: 56, 
+                height: 56,
+                background: `linear-gradient(135deg, ${SAGE_COLORS.dark} 0%, ${SAGE_COLORS.darkMedium} 100%)`
+              }}>
                 <TrendingUp fontSize="large" />
               </Avatar>
               <Box>
-                <Typography variant="h4" fontWeight="bold" color="primary">
+                <Typography variant="h4" fontWeight="bold" sx={{ color: SAGE_COLORS.dark }}>
                   AI Investment Advisory
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1" sx={{ color: SAGE_COLORS.textLight }}>
                   Smart portfolio optimization and financial literacy insights
                 </Typography>
               </Box>
@@ -590,7 +607,7 @@ const Investment = () => {
                 sx={{
                   borderRadius: 3,
                   textTransform: 'none',
-                  background: 'linear-gradient(45deg, #dc004e 30%, #f48fb1 90%)',
+                  background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)`,
                 }}
               >
                 Analyze News
@@ -608,15 +625,15 @@ const Investment = () => {
             <CardHeader
               title={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <AccountBalance color="primary" />
-                  <Typography variant="h6" fontWeight="bold">
+                  <AccountBalance sx={{ color: SAGE_COLORS.darkMedium }} />
+                  <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                     Portfolio Selection
                   </Typography>
                 </Box>
               }
               action={
                 <Tooltip title="Refresh Analysis">
-                  <IconButton onClick={fetchPortfolioAnalysis} disabled={analysisLoading}>
+                  <IconButton onClick={fetchPortfolioAnalysis} disabled={analysisLoading} sx={{ color: SAGE_COLORS.darkMedium }}>
                     {analysisLoading ? <CircularProgress size={20} /> : <Refresh />}
                   </IconButton>
                 </Tooltip>
@@ -625,7 +642,7 @@ const Investment = () => {
             <CardContent>
               {/* Stock Search */}
               <SearchBox>
-                <SearchRounded sx={{ mr: 1, color: 'text.secondary' }} />
+                <SearchRounded sx={{ mr: 1, color: SAGE_COLORS.textLight }} />
                 <InputBase
                   ref={searchInputRef}
                   placeholder="Search stocks (e.g., AAPL, Tesla)..."
@@ -643,7 +660,7 @@ const Investment = () => {
                   overflow: 'auto',
                   borderRadius: 2,
                   border: '1px solid',
-                  borderColor: 'divider'
+                  borderColor: alpha(SAGE_COLORS.darkMedium, 0.2)
                 }}>
                   <List sx={{ p: 1 }}>
                     {filteredStocks.slice(0, 5).map((stock) => (
@@ -657,7 +674,7 @@ const Investment = () => {
                           mb: 0.5,
                           transition: 'all 0.2s ease',
                           '&:hover': {
-                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                            backgroundColor: alpha(SAGE_COLORS.darkMedium, 0.1),
                             transform: 'translateX(4px)',
                           },
                         }}
@@ -667,7 +684,7 @@ const Investment = () => {
                             mr: 2, 
                             width: 40, 
                             height: 40,
-                            background: 'linear-gradient(45deg, #2196f3 30%, #64b5f6 90%)',
+                            background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)`,
                             fontSize: '0.875rem',
                             fontWeight: 'bold'
                           }}
@@ -679,10 +696,10 @@ const Investment = () => {
                           primary={
                             <Stack direction="row" justifyContent="space-between" alignItems="center">
                               <Box>
-                                <Typography variant="body1" fontWeight="bold">
+                                <Typography variant="body1" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                                   {stock.ticker}
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{ 
+                                <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight, 
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap',
@@ -697,15 +714,15 @@ const Investment = () => {
                                   label="Add"
                                   size="small"
                                   sx={{ 
-                                    background: alpha(theme.palette.success.main, 0.1),
-                                    color: 'success.main',
+                                    background: alpha(SAGE_COLORS.darkMedium, 0.1),
+                                    color: SAGE_COLORS.dark,
                                     border: '1px solid',
-                                    borderColor: alpha(theme.palette.success.main, 0.3),
+                                    borderColor: alpha(SAGE_COLORS.darkMedium, 0.3),
                                     fontWeight: 'medium'
                                   }}
                                 />
                                 <Visibility sx={{ 
-                                  color: 'primary.main',
+                                  color: SAGE_COLORS.darkMedium,
                                   fontSize: 20
                                 }} />
                               </Stack>
@@ -719,7 +736,7 @@ const Investment = () => {
                       <ListItem>
                         <ListItemText
                           primary={
-                            <Typography variant="body2" color="text.secondary" textAlign="center">
+                            <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }} textAlign="center">
                               No stocks found matching your search
                             </Typography>
                           }
@@ -733,47 +750,9 @@ const Investment = () => {
               {/* Current Portfolio */}
               <Box sx={{ mt: 3 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                  <Typography variant="subtitle1" fontWeight="bold">
+                  <Typography variant="subtitle1" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                     Current Portfolio ({portfolio.length} stocks)
                   </Typography>
-                  
-                  {/* Portfolio Summary */}
-                  {/* {portfolio.length > 0 && Object.keys(stockPrices).length > 0 && (
-                    <Box sx={{ textAlign: 'right' }}>
-                      {(() => {
-                        const validPrices = portfolio.filter(ticker => 
-                          stockPrices[ticker] && !stockPrices[ticker].error && stockPrices[ticker].price
-                        );
-                        
-                        if (validPrices.length === 0) return null;
-                        
-                        const totalValue = validPrices.reduce((sum, ticker) => 
-                          sum + (stockPrices[ticker].price || 0), 0
-                        );
-                        
-                        const avgChange = validPrices.reduce((sum, ticker) => 
-                          sum + (stockPrices[ticker].change_percent || 0), 0
-                        ) / validPrices.length;
-                        
-                        return (
-                          <>
-                            <Typography variant="h6" fontWeight="bold">
-                              ${totalValue.toFixed(2)}
-                            </Typography>
-                            <Typography 
-                              variant="caption" 
-                              sx={{ 
-                                color: avgChange >= 0 ? '#4caf50' : '#f44336',
-                                fontWeight: 'medium'
-                              }}
-                            >
-                              {avgChange >= 0 ? '+' : ''}{avgChange.toFixed(2)}% avg
-                            </Typography>
-                          </>
-                        );
-                      })()}
-                    </Box>
-                  )} */}
                 </Stack>
                 
                 {portfolio.length === 0 ? (
@@ -781,11 +760,11 @@ const Investment = () => {
                     p: 3, 
                     textAlign: 'center', 
                     border: '2px dashed',
-                    borderColor: 'divider',
+                    borderColor: alpha(SAGE_COLORS.darkMedium, 0.3),
                     borderRadius: 2,
                     mt: 2
                   }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }}>
                       No stocks in portfolio. Search and add stocks to get started.
                     </Typography>
                   </Paper>
@@ -803,13 +782,13 @@ const Investment = () => {
                             <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                               <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
                                 <Box sx={{ flex: 1 }}>
-                                  <Typography variant="h6" fontWeight="bold" color="primary">
+                                  <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.dark }}>
                                     {ticker}
                                   </Typography>
                                   
                                   {stockPrice && !stockPrice.error ? (
                                     <Stack spacing={0.5} sx={{ mt: 1 }}>
-                                      <Typography variant="h5" fontWeight="bold">
+                                      <Typography variant="h5" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                                         ${stockPrice.price?.toFixed(2) || 'N/A'}
                                       </Typography>
                                       
@@ -837,24 +816,24 @@ const Investment = () => {
                                             {trend === 'up' ? '+' : ''}{stockPrice.change_percent.toFixed(2)}%
                                           </Typography>
                                           
-                                          <Typography variant="caption" color="text.secondary">
+                                          <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                                             (${stockPrice.change?.toFixed(2) || '0.00'})
                                           </Typography>
                                         </Box>
                                       )}
                                       
-                                      <Typography variant="caption" color="text.secondary">
+                                      <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                                         Live Price
                                       </Typography>
                                     </Stack>
                                   ) : (
                                     <Stack spacing={0.5} sx={{ mt: 1 }}>
-                                      <Typography variant="body2" color="text.secondary">
+                                      <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }}>
                                         {stockPrice?.error || 'Loading price...'}
                                       </Typography>
                                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <CircularProgress size={12} />
-                                        <Typography variant="caption" color="text.secondary">
+                                        <CircularProgress size={12} sx={{ color: SAGE_COLORS.darkMedium }} />
+                                        <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                                           Fetching data
                                         </Typography>
                                       </Box>
@@ -866,10 +845,10 @@ const Investment = () => {
                                   onClick={() => removeFromPortfolio(ticker)}
                                   size="small"
                                   sx={{ 
-                                    color: 'text.secondary',
+                                    color: SAGE_COLORS.textLight,
                                     '&:hover': {
-                                      color: 'error.main',
-                                      backgroundColor: alpha(theme.palette.error.main, 0.1)
+                                      color: '#f44336',
+                                      backgroundColor: alpha('#f44336', 0.1)
                                     }
                                   }}
                                 >
@@ -916,7 +895,7 @@ const Investment = () => {
                   mt: 3, 
                   borderRadius: 3,
                   textTransform: 'none',
-                  background: 'linear-gradient(45deg, #1976d2 30%, #64b5f6 90%)'
+                  background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)`
                 }}
               >
                 {isAnalyzing ? 'Analyzing...' : 'Run Portfolio Analysis'}
@@ -934,8 +913,8 @@ const Investment = () => {
                 <CardHeader
                   title={
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <PieIcon color="primary" />
-                      <Typography variant="h6" fontWeight="bold">
+                      <PieIcon sx={{ color: SAGE_COLORS.darkMedium }} />
+                      <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                         Asset Allocation
                       </Typography>
                     </Box>
@@ -944,7 +923,7 @@ const Investment = () => {
                 <CardContent>
                   {analysisLoading ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 250 }}>
-                      <CircularProgress />
+                      <CircularProgress sx={{ color: SAGE_COLORS.darkMedium }} />
                     </Box>
                   ) : (
                     <>
@@ -969,14 +948,14 @@ const Investment = () => {
                       {/* Strategy Name */}
                       {portfolioAnalysis?.comparison?.best_performer && (
                         <Box sx={{ mt: 2, textAlign: 'center' }}>
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                          <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }} gutterBottom>
                             Strategy:
                           </Typography>
                           <Chip 
                             label={portfolioAnalysis.comparison.best_performer}
                             size="small"
                             sx={{ 
-                              background: 'linear-gradient(45deg, #2196f3 30%, #4caf50 90%)',
+                              background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)`,
                               color: 'white',
                               fontWeight: 'bold'
                             }}
@@ -995,8 +974,8 @@ const Investment = () => {
                 <CardHeader
                   title={
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <ShowChart color="primary" />
-                      <Typography variant="h6" fontWeight="bold">
+                      <ShowChart sx={{ color: SAGE_COLORS.darkMedium }} />
+                      <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                         Performance Metrics
                       </Typography>
                     </Box>
@@ -1011,7 +990,13 @@ const Investment = () => {
                         sx={{
                           borderRadius: 2,
                           textTransform: 'none',
-                          fontSize: '0.75rem'
+                          fontSize: '0.75rem',
+                          color: SAGE_COLORS.dark,
+                          borderColor: SAGE_COLORS.darkMedium,
+                          '&:hover': {
+                            borderColor: SAGE_COLORS.dark,
+                            backgroundColor: alpha(SAGE_COLORS.darkMedium, 0.1),
+                          }
                         }}
                       >
                         Metric Details
@@ -1022,21 +1007,21 @@ const Investment = () => {
                 <CardContent>
                   {analysisLoading ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 250 }}>
-                      <CircularProgress />
+                      <CircularProgress sx={{ color: SAGE_COLORS.darkMedium }} />
                     </Box>
                   ) : portfolioAnalysis?.strategies && portfolioAnalysis.strategies.length > 0 ? (
                     <Stack spacing={3}>
                       {portfolioAnalysis.strategies.map((strategy, index) => (
                         <Box key={index}>
-                          <Typography variant="h6" color="primary" gutterBottom>
+                          <Typography variant="h6" sx={{ color: SAGE_COLORS.dark }} gutterBottom>
                             {strategy.name}
                           </Typography>
                           <Grid container spacing={2}>
                             <Grid item xs={4}>
-                              <Typography variant="body2" color="text.secondary" gutterBottom>
+                              <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }} gutterBottom>
                                 Annualized Return
                               </Typography>
-                              <Typography variant="h6" fontWeight="bold" color="success.main">
+                              <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.dark }}>
                                 {strategy.metrics.annualized_return ? 
                                   (strategy.metrics.annualized_return * 100).toFixed(2) + '%' :
                                   ((Math.pow(1 + strategy.metrics.total_return, 1/strategy.metrics.years_analyzed) - 1) * 100).toFixed(2) + '%'
@@ -1044,18 +1029,18 @@ const Investment = () => {
                               </Typography>
                             </Grid>
                             <Grid item xs={4}>
-                              <Typography variant="body2" color="text.secondary" gutterBottom>
+                              <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }} gutterBottom>
                                 Volatility
                               </Typography>
-                              <Typography variant="h6" fontWeight="bold" color="warning.main">
+                              <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.dark }}>
                                 {(strategy.metrics.volatility * 100).toFixed(2)}%
                               </Typography>
                             </Grid>
                             <Grid item xs={4}>
-                              <Typography variant="body2" color="text.secondary" gutterBottom>
+                              <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }} gutterBottom>
                                 Sharpe Ratio
                               </Typography>
-                              <Typography variant="h6" fontWeight="bold" color="info.main">
+                              <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.dark }}>
                                 {strategy.metrics.sharpe_ratio.toFixed(3)}
                               </Typography>
                             </Grid>
@@ -1065,11 +1050,11 @@ const Investment = () => {
                       ))}
                       
                       {portfolioAnalysis.comparison && (
-                        <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
-                          <Typography variant="subtitle2" color="primary" gutterBottom>
+                        <Box sx={{ mt: 3, p: 2, borderRadius: 2, bgcolor: alpha(SAGE_COLORS.darkMedium, 0.05) }}>
+                          <Typography variant="subtitle2" sx={{ color: SAGE_COLORS.dark }} gutterBottom>
                             Recommendation: {portfolioAnalysis.comparison.best_performer}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }}>
                             {portfolioAnalysis.comparison.recommendation}
                           </Typography>
                         </Box>
@@ -1077,7 +1062,7 @@ const Investment = () => {
                     </Stack>
                   ) : (
                     <Box sx={{ textAlign: 'center', py: 4 }}>
-                      <Typography variant="body1" color="text.secondary">
+                      <Typography variant="body1" sx={{ color: SAGE_COLORS.textLight }}>
                         Run analysis to see performance metrics
                       </Typography>
                     </Box>
@@ -1092,8 +1077,8 @@ const Investment = () => {
                 <CardHeader
                   title={
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <SignalCellularAlt color="primary" />
-                      <Typography variant="h6" fontWeight="bold">
+                      <SignalCellularAlt sx={{ color: SAGE_COLORS.darkMedium }} />
+                      <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                         Financial Literacy Insights
                       </Typography>
                     </Box>
@@ -1103,13 +1088,18 @@ const Investment = () => {
                   <Grid container spacing={3}>
                     <Grid item xs={12} md={4}>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
-                        <Avatar sx={{ bgcolor: theme.palette.success.main, mx: 'auto', mb: 2 }}>
+                        <Avatar sx={{ 
+                          bgcolor: SAGE_COLORS.darkMedium, 
+                          mx: 'auto', 
+                          mb: 2,
+                          background: `linear-gradient(135deg, ${SAGE_COLORS.dark} 0%, ${SAGE_COLORS.darkMedium} 100%)`
+                        }}>
                           <TrendingUp />
                         </Avatar>
-                        <Typography variant="h6" fontWeight="bold" gutterBottom>
+                        <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color: SAGE_COLORS.text }}>
                           Diversification
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }}>
                           Spread risk across different assets and sectors to optimize your portfolio's risk-return profile.
                         </Typography>
                       </Box>
@@ -1117,13 +1107,18 @@ const Investment = () => {
                     
                     <Grid item xs={12} md={4}>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
-                        <Avatar sx={{ bgcolor: theme.palette.info.main, mx: 'auto', mb: 2 }}>
+                        <Avatar sx={{ 
+                          bgcolor: SAGE_COLORS.medium, 
+                          mx: 'auto', 
+                          mb: 2,
+                          background: `linear-gradient(135deg, ${SAGE_COLORS.darkMedium} 0%, ${SAGE_COLORS.medium} 100%)`
+                        }}>
                           <Analytics />
                         </Avatar>
-                        <Typography variant="h6" fontWeight="bold" gutterBottom>
+                        <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color: SAGE_COLORS.text }}>
                           Risk Management
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }}>
                           Understanding volatility and using metrics like Sharpe ratio helps make informed investment decisions.
                         </Typography>
                       </Box>
@@ -1131,13 +1126,18 @@ const Investment = () => {
                     
                     <Grid item xs={12} md={4}>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
-                        <Avatar sx={{ bgcolor: theme.palette.warning.main, mx: 'auto', mb: 2 }}>
+                        <Avatar sx={{ 
+                          bgcolor: SAGE_COLORS.dark, 
+                          mx: 'auto', 
+                          mb: 2,
+                          background: `linear-gradient(135deg, ${SAGE_COLORS.darker} 0%, ${SAGE_COLORS.dark} 100%)`
+                        }}>
                           <ShowChart />
                         </Avatar>
-                        <Typography variant="h6" fontWeight="bold" gutterBottom>
+                        <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color: SAGE_COLORS.text }}>
                           Long-term Thinking
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }}>
                           Focus on long-term growth rather than short-term market fluctuations for better investment outcomes.
                         </Typography>
                       </Box>
@@ -1174,8 +1174,8 @@ const Investment = () => {
           sx: {
             borderRadius: 3,
             background: theme.palette.mode === 'dark'
-              ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-              : 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
+              ? 'linear-gradient(135deg, #1a1f1a 0%, #2d322d 100%)'
+              : 'linear-gradient(135deg, #ffffff 0%, #f8faf8 100%)',
             backdropFilter: 'blur(20px)',
           }
         }}
@@ -1186,16 +1186,16 @@ const Investment = () => {
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar sx={{ 
-                bgcolor: 'primary.main', 
-                background: 'linear-gradient(45deg, #2196f3 30%, #4caf50 90%)' 
+                bgcolor: SAGE_COLORS.darkMedium,
+                background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)` 
               }}>
                 <Analytics />
               </Avatar>
               <Box>
-                <Typography variant="h5" fontWeight="bold">
+                <Typography variant="h5" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                   Portfolio Analysis Report
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight }}>
                   Detailed metrics and performance comparison
                 </Typography>
               </Box>
@@ -1210,17 +1210,17 @@ const Investment = () => {
           {portfolioAnalysis?.strategies && portfolioAnalysis.strategies.length > 0 ? (
             <Stack spacing={4}>
               {/* Market Conditions */}
-              <Paper elevation={0} sx={{ p: 3, borderRadius: 2, background: alpha(theme.palette.primary.main, 0.05) }}>
-                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <TrendingUp color="primary" />
+              <Paper elevation={0} sx={{ p: 3, borderRadius: 2, background: alpha(SAGE_COLORS.darkMedium, 0.05) }}>
+                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, color: SAGE_COLORS.text }}>
+                  <TrendingUp sx={{ color: SAGE_COLORS.darkMedium }} />
                   Market Conditions
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={3}>
-                    <Typography variant="caption" color="text.secondary">MARKET STATUS</Typography>
+                    <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>MARKET STATUS</Typography>
                     <Typography variant="h6" sx={{ 
-                      color: portfolioAnalysis.metadata?.market_conditions?.condition === 'bull' ? 'success.main' : 
-                             portfolioAnalysis.metadata?.market_conditions?.condition === 'bear' ? 'error.main' : 'warning.main',
+                      color: portfolioAnalysis.metadata?.market_conditions?.condition === 'bull' ? SAGE_COLORS.dark : 
+                             portfolioAnalysis.metadata?.market_conditions?.condition === 'bear' ? '#f44336' : SAGE_COLORS.darkMedium,
                       textTransform: 'capitalize',
                       fontWeight: 'bold'
                     }}>
@@ -1228,20 +1228,20 @@ const Investment = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={3}>
-                    <Typography variant="caption" color="text.secondary">ANALYSIS PERIOD</Typography>
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>ANALYSIS PERIOD</Typography>
+                    <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                       {portfolioAnalysis.strategies[0]?.metrics?.years_analyzed?.toFixed(1) || '13'} Years
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={3}>
-                    <Typography variant="caption" color="text.secondary">DATA POINTS</Typography>
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>DATA POINTS</Typography>
+                    <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                       {portfolioAnalysis.strategies[0]?.portfolio_return?.length || '3,000+'} Days
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={3}>
-                    <Typography variant="caption" color="text.secondary">TIMESTAMP</Typography>
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>TIMESTAMP</Typography>
+                    <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                       {portfolioAnalysis.metadata?.timestamp ? 
                         new Date(portfolioAnalysis.metadata.timestamp).toLocaleDateString() : 'Today'
                       }
@@ -1252,8 +1252,8 @@ const Investment = () => {
 
               {/* Portfolio Returns Chart */}
               <Paper elevation={0} sx={{ p: 3, borderRadius: 2 }}>
-                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <ShowChart color="primary" />
+                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, color: SAGE_COLORS.text }}>
+                  <ShowChart sx={{ color: SAGE_COLORS.darkMedium }} />
                   Portfolio Returns Comparison
                 </Typography>
                 <Box sx={{ width: '100%', height: 400, mt: 2 }}>
@@ -1287,7 +1287,7 @@ const Investment = () => {
                       <Line 
                         type="monotone" 
                         dataKey="Mean Variance Criterion" 
-                        stroke="#2196f3" 
+                        stroke={SAGE_COLORS.dark} 
                         strokeWidth={3}
                         dot={false}
                         activeDot={{ r: 6 }}
@@ -1295,7 +1295,7 @@ const Investment = () => {
                       <Line 
                         type="monotone" 
                         dataKey="Sharpe Ratio Criterion" 
-                        stroke="#4caf50" 
+                        stroke={SAGE_COLORS.darkMedium} 
                         strokeWidth={3}
                         dot={false}
                         activeDot={{ r: 6 }}
@@ -1313,8 +1313,8 @@ const Investment = () => {
                       <CardHeader
                         title={
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <AutoGraph sx={{ color: index === 0 ? '#2196f3' : '#4caf50' }} />
-                            <Typography variant="h6" fontWeight="bold">
+                            <AutoGraph sx={{ color: index === 0 ? SAGE_COLORS.dark : SAGE_COLORS.darkMedium }} />
+                            <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                               {strategy.name}
                             </Typography>
                           </Stack>
@@ -1326,24 +1326,24 @@ const Investment = () => {
                         
                         <Grid container spacing={2}>
                           <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                               TOTAL RETURN (13 YEARS)
                             </Typography>
                             <Typography variant="h6" sx={{ 
-                              color: strategy.metrics?.total_return > 0 ? 'success.main' : 'error.main',
+                              color: strategy.metrics?.total_return > 0 ? SAGE_COLORS.dark : '#f44336',
                               fontWeight: 'bold'
                             }}>
                               {(strategy.metrics?.total_return * 100).toFixed(2)}%
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                               ANNUALIZED RETURN
                             </Typography>
                             <Typography variant="h6" sx={{ 
                               color: (strategy.metrics?.annualized_return || 
                                      (Math.pow(1 + strategy.metrics?.total_return, 1/strategy.metrics?.years_analyzed) - 1)) > 0 
-                                     ? 'success.main' : 'error.main',
+                                     ? SAGE_COLORS.dark : '#f44336',
                               fontWeight: 'bold'
                             }}>
                               {strategy.metrics?.annualized_return ? 
@@ -1353,41 +1353,41 @@ const Investment = () => {
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                               AVG DAILY RETURN
                             </Typography>
-                            <Typography variant="h6" fontWeight="bold">
+                            <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                               {(strategy.metrics?.avg_daily_return * 100).toFixed(4)}%
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                               DAILY VOLATILITY
                             </Typography>
-                            <Typography variant="h6" fontWeight="bold" color="warning.main">
+                            <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                               {(strategy.metrics?.volatility * 100).toFixed(4)}%
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                               SHARPE RATIO (ANN.)
                             </Typography>
                             <Typography variant="h6" sx={{ 
                               color: strategy.metrics?.sharpe_ratio > 1 
-                                ? 'success.main' 
+                                ? SAGE_COLORS.dark 
                                 : strategy.metrics?.sharpe_ratio > 0.5 
-                                ? 'warning.main' 
-                                : 'error.main',
+                                ? SAGE_COLORS.darkMedium 
+                                : '#f44336',
                               fontWeight: 'bold'
                             }}>
                               {strategy.metrics?.sharpe_ratio?.toFixed(4)}
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                               ANALYSIS PERIOD
                             </Typography>
-                            <Typography variant="h6" fontWeight="bold">
+                            <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                               {strategy.metrics?.years_analyzed?.toFixed(1) || '13'} years
                             </Typography>
                           </Grid>
@@ -1395,7 +1395,7 @@ const Investment = () => {
 
                         {/* Allocation Breakdown */}
                         <Box sx={{ mt: 3 }}>
-                          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                          <Typography variant="subtitle2" sx={{ color: SAGE_COLORS.textLight }} gutterBottom>
                             ALLOCATION BREAKDOWN
                           </Typography>
                           {Object.entries(strategy.ticker_allocation || {})
@@ -1404,8 +1404,8 @@ const Investment = () => {
                             .map(([ticker, weight]) => (
                               <Box key={ticker} sx={{ mb: 1 }}>
                                 <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                  <Typography variant="body2" fontWeight="medium">{ticker}</Typography>
-                                  <Typography variant="body2" fontWeight="bold">
+                                  <Typography variant="body2" fontWeight="medium" sx={{ color: SAGE_COLORS.text }}>{ticker}</Typography>
+                                  <Typography variant="body2" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                                     {(weight * 100).toFixed(2)}%
                                   </Typography>
                                 </Stack>
@@ -1419,8 +1419,8 @@ const Investment = () => {
                                     '& .MuiLinearProgress-bar': {
                                       borderRadius: 3,
                                       background: index === 0 
-                                        ? 'linear-gradient(90deg, #2196f3 0%, #64b5f6 100%)'
-                                        : 'linear-gradient(90deg, #4caf50 0%, #81c784 100%)',
+                                        ? `linear-gradient(90deg, ${SAGE_COLORS.dark} 0%, ${SAGE_COLORS.darkMedium} 100%)`
+                                        : `linear-gradient(90deg, ${SAGE_COLORS.darkMedium} 0%, ${SAGE_COLORS.medium} 100%)`,
                                     }
                                   }}
                                 />
@@ -1446,28 +1446,28 @@ const Investment = () => {
               <Paper elevation={0} sx={{ 
                 p: 3, 
                 borderRadius: 2, 
-                background: alpha(theme.palette.success.main, 0.05),
-                border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`
+                background: alpha(SAGE_COLORS.darkMedium, 0.05),
+                border: `1px solid ${alpha(SAGE_COLORS.darkMedium, 0.2)}`
               }}>
-                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <CheckCircle color="success" />
+                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, color: SAGE_COLORS.text }}>
+                  <CheckCircle sx={{ color: SAGE_COLORS.dark }} />
                   Algorithm Recommendation
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ mb: 2, color: SAGE_COLORS.text }}>
                   Based on risk-adjusted returns and current market conditions:
                 </Typography>
                 <Chip 
                   label={`Recommended: ${portfolioAnalysis.comparison?.best_performer || 'Mean Variance Criterion'}`}
                   sx={{ 
                     fontWeight: 'bold',
-                    background: 'linear-gradient(45deg, #2196f3 30%, #4caf50 90%)',
+                    background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)`,
                     color: 'white',
                     px: 2,
                     py: 0.5,
                     fontSize: '1rem'
                   }}
                 />
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                <Typography variant="body2" sx={{ color: SAGE_COLORS.textLight, mt: 2 }}>
                   {portfolioAnalysis.comparison?.recommendation || 
                    'This strategy provides optimal risk-adjusted returns based on historical performance.'}
                 </Typography>
@@ -1475,8 +1475,8 @@ const Investment = () => {
             </Stack>
           ) : (
             <Box sx={{ textAlign: 'center', py: 4 }}>
-              <Analytics sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-              <Typography variant="h6" color="text.secondary">
+              <Analytics sx={{ fontSize: 60, color: SAGE_COLORS.textLight, mb: 2 }} />
+              <Typography variant="h6" sx={{ color: SAGE_COLORS.textLight }}>
                 No analysis data available
               </Typography>
             </Box>
@@ -1487,7 +1487,16 @@ const Investment = () => {
           <Button
             variant="outlined"
             onClick={() => setMetricDetailsOpen(false)}
-            sx={{ borderRadius: 2, textTransform: 'none' }}
+            sx={{ 
+              borderRadius: 2, 
+              textTransform: 'none',
+              color: SAGE_COLORS.dark,
+              borderColor: SAGE_COLORS.darkMedium,
+              '&:hover': {
+                borderColor: SAGE_COLORS.dark,
+                backgroundColor: alpha(SAGE_COLORS.darkMedium, 0.1),
+              }
+            }}
           >
             Close
           </Button>
@@ -1507,10 +1516,10 @@ const Investment = () => {
               <>
                 <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={3}>
                   <Box>
-                    <Typography variant="h5" component="h2" fontWeight="bold">
+                    <Typography variant="h5" component="h2" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                       {selectedStock.name}
                     </Typography>
-                    <Typography variant="subtitle1" color="primary" fontWeight="medium">
+                    <Typography variant="subtitle1" sx={{ color: SAGE_COLORS.dark, fontWeight: 'medium' }}>
                       {selectedStock.ticker}
                     </Typography>
                   </Box>
@@ -1519,7 +1528,7 @@ const Investment = () => {
                       label="STOCK"
                       size="small"
                       sx={{ 
-                        background: 'linear-gradient(45deg, #2196f3 30%, #64b5f6 90%)',
+                        background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)`,
                         color: 'white',
                         fontWeight: 'bold'
                       }}
@@ -1528,10 +1537,10 @@ const Investment = () => {
                       onClick={handleStockModalClose}
                       size="small"
                       sx={{ 
-                        color: 'text.secondary',
+                        color: SAGE_COLORS.textLight,
                         '&:hover': {
-                          backgroundColor: alpha(theme.palette.error.main, 0.1),
-                          color: 'error.main'
+                          backgroundColor: alpha('#f44336', 0.1),
+                          color: '#f44336'
                         }
                       }}
                     >
@@ -1542,48 +1551,46 @@ const Investment = () => {
                 
                 <Divider sx={{ mb: 3 }} />
                 
-                <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.8 }}>
+                <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.8, color: SAGE_COLORS.text }}>
                   {selectedStock.detail || `${selectedStock.name} is a publicly traded company listed under the ticker symbol ${selectedStock.ticker}. This stock represents ownership in the company and can be added to your investment portfolio for analysis and optimization.`}
                 </Typography>
                 
                 <Box sx={{ 
                   p: 2, 
-                  background: theme.palette.mode === 'dark'
-                    ? 'rgba(255,255,255,0.05)'
-                    : 'rgba(0,0,0,0.05)',
+                  background: alpha(SAGE_COLORS.darkMedium, 0.05),
                   borderRadius: 2,
                   mb: 3
                 }}>
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                         SYMBOL
                       </Typography>
-                      <Typography variant="body2" fontWeight="bold">
+                      <Typography variant="body2" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                         {selectedStock.ticker}
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                         SECTOR
                       </Typography>
-                      <Typography variant="body2" fontWeight="bold">
+                      <Typography variant="body2" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                         {selectedStock.sector || 'Technology'}
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                         EXCHANGE
                       </Typography>
-                      <Typography variant="body2" fontWeight="bold">
+                      <Typography variant="body2" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                         {selectedStock.exchange || 'NASDAQ'}
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                         STATUS
                       </Typography>
-                      <Typography variant="body2" fontWeight="bold" color="success.main">
+                      <Typography variant="body2" fontWeight="bold" sx={{ color: SAGE_COLORS.dark }}>
                         Active
                       </Typography>
                     </Grid>
@@ -1594,20 +1601,20 @@ const Investment = () => {
                 {stockPrices[selectedStock.ticker] && (
                   <Box sx={{ 
                     p: 2, 
-                    background: alpha(theme.palette.primary.main, 0.05),
+                    background: alpha(SAGE_COLORS.darkMedium, 0.1),
                     borderRadius: 2,
                     mb: 3,
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`
+                    border: `1px solid ${alpha(SAGE_COLORS.darkMedium, 0.2)}`
                   }}>
-                    <Typography variant="caption" color="text.secondary" gutterBottom display="block">
+                    <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }} gutterBottom display="block">
                       CURRENT MARKET DATA
                     </Typography>
                     <Grid container spacing={2}>
                       <Grid item xs={4}>
-                        <Typography variant="h6" fontWeight="bold">
+                        <Typography variant="h6" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                           ${stockPrices[selectedStock.ticker].price?.toFixed(2)}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                           Current Price
                         </Typography>
                       </Grid>
@@ -1615,20 +1622,22 @@ const Investment = () => {
                         <Typography 
                           variant="body2" 
                           fontWeight="bold"
-                          color={stockPrices[selectedStock.ticker].change_percent >= 0 ? 'success.main' : 'error.main'}
+                          sx={{ 
+                            color: stockPrices[selectedStock.ticker].change_percent >= 0 ? SAGE_COLORS.dark : '#f44336'
+                          }}
                         >
                           {stockPrices[selectedStock.ticker].change_percent >= 0 ? '+' : ''}
                           {stockPrices[selectedStock.ticker].change_percent?.toFixed(2)}%
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                           Daily Change
                         </Typography>
                       </Grid>
                       <Grid item xs={4}>
-                        <Typography variant="body2" fontWeight="bold">
+                        <Typography variant="body2" fontWeight="bold" sx={{ color: SAGE_COLORS.text }}>
                           Live
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: SAGE_COLORS.textLight }}>
                           Data Status
                         </Typography>
                       </Grid>
@@ -1649,9 +1658,9 @@ const Investment = () => {
                       borderRadius: 2,
                       textTransform: 'none',
                       py: 1.5,
-                      background: 'linear-gradient(45deg, #2196f3 30%, #64b5f6 90%)',
+                      background: `linear-gradient(45deg, ${SAGE_COLORS.dark} 30%, ${SAGE_COLORS.darkMedium} 90%)`,
                       '&:hover': {
-                        background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
+                        background: `linear-gradient(45deg, ${SAGE_COLORS.darker} 30%, ${SAGE_COLORS.dark} 90%)`,
                       }
                     }}
                   >
@@ -1665,6 +1674,12 @@ const Investment = () => {
                       borderRadius: 2,
                       textTransform: 'none',
                       py: 1.5,
+                      color: SAGE_COLORS.dark,
+                      borderColor: SAGE_COLORS.darkMedium,
+                      '&:hover': {
+                        borderColor: SAGE_COLORS.dark,
+                        backgroundColor: alpha(SAGE_COLORS.darkMedium, 0.1),
+                      }
                     }}
                   >
                     Cancel
