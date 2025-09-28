@@ -362,9 +362,9 @@ const Literacy = () => {
 
       <header className="header" style={{ textAlign: "center", marginBottom: "4rem" }}>
         <div className="logo" style={{ display: "inline-block", width: "60px", height: "60px", background: "linear-gradient(135deg, #4facfe, #00f2fe)", borderRadius: "16px", color: "white", fontWeight: "bold", fontSize: "2rem", lineHeight: "60px", marginBottom: "1rem" }}>R</div>
-        <h1 className="title" style={{ fontSize: "3rem", fontWeight: 900 }}>Financial Literacy Hub</h1>
+        <h1 className="title" style={{ fontSize: "3rem", fontWeight: 900 }}>Financial Education Center</h1>
         <p className="subtitle" style={{ fontSize: "1.2rem", color: "#555", maxWidth: "800px", margin: "0 auto" }}>
-          Master your finances with practical South African examples, from safe savings to bold investments, all explained in Rands you can relate to.
+          Master your finances with practical South African examples, from safe savings to bold investments.
         </p>
       </header>
 
